@@ -1,7 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from mpl_toolkits.axes_grid import ImageGrid
-
+from mpl_toolkits.axes_grid1 import ImageGrid
 
 def get_fourier_basis(size, u, v):
     # get 2D grid

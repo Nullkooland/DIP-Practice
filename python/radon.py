@@ -42,14 +42,14 @@ def get_backprojection_filter(length, ftype='ram-lak'):
 
 
 if __name__ == "__main__":
-    src_img = cv2.imread('./images/pattern.png')
+    src_img = cv2.imread('./images/phantom.png')
     src_img = cv2.cvtColor(src_img, cv2.COLOR_BGR2GRAY)
     src_img = np.float32(src_img) / 255.0
 
     theta = np.linspace(0, 180 - 180 / N_theta, N_theta)
     g = radon(src_img, theta)
 
-    g = np.flip(g)
+    # g = np.flip(g)
 
     d = g.shape[1]
     g /= np.max(g)
