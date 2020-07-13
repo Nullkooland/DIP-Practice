@@ -1,6 +1,9 @@
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.cm import ScalarMappable
+from matplotlib.colors import Normalize
+from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 src_img = cv2.imread('./images/monarch.png')
 src_img = cv2.cvtColor(src_img, cv2.COLOR_BGR2RGB)
@@ -20,17 +23,19 @@ grad_img = cv2.merge((grad_angle, np.full_like(
     grad_mag, 255, dtype=np.uint8), grad_mag))
 grad_img = cv2.cvtColor(grad_img, cv2.COLOR_HSV2RGB_FULL)
 
-plt.figure('Gradient', figsize=(16, 6))
+fig, (ax0, ax1) = plt.subplots(1, 2, num='Gradient', figsize=(16, 6))
 
-h, w, c = src_img.shape
+ax0.imshow(src_img)
+ax0.set_title('Original')
 
-plt.subplot(1, 2, 1)
-plt.imshow(src_img)
-plt.title('Original')
+ax1.imshow(grad_img)
+ax1.set_title('Gradient')
 
-plt.subplot(1, 2, 2)
-plt.imshow(grad_img)
-plt.title('Gradient')
+divider = make_axes_locatable(ax1)
+cax = divider.append_axes('bottom', size='4%', pad=0.1)
 
-plt.tight_layout()
+fig.colorbar(ScalarMappable(norm=Normalize(vmin=0, vmax=360), cmap='hsv'),
+             cax=cax, label=r'gradient angle / $^\circ$', orientation='horizontal',
+             ticks=np.arange(0, 361, 30))
+
 plt.show()
