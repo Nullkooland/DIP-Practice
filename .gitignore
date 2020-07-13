@@ -5,4 +5,4 @@ opencv-*/
 papers/
 output/
 build/
-setting.json
+.vscode/settings.json
