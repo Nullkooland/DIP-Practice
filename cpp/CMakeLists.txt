@@ -11,3 +11,4 @@ find_package(OpenCV REQUIRED)
 
 add_subdirectory(side_window_filtering)
 add_subdirectory(interpolation)
+add_subdirectory(orga_no_care)
