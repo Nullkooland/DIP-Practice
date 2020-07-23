@@ -38,7 +38,7 @@ plt.figure('Hough Lines', figsize=(12, 8))
 
 plt.subplot(2, 2, 1)
 plt.imshow(src_img, cmap='gray')
-plt.title('It Almost Seems Too Quiet Street')
+plt.title('\"It Almost Seems Too Quiet\" Street')
 
 plt.subplot(2, 2, 2)
 plt.imshow(edge_map, cmap='gray')
