@@ -61,10 +61,12 @@ def poke_holes(img, p):
 
 if __name__ == "__main__":
     # Load image
-    src_img = cv2.imread('./images/cartoon.png')
+    src_img = cv2.imread('./images/lena256.png')
     src_img = cv2.cvtColor(src_img, cv2.COLOR_BGR2GRAY)
     src_img = np.float32(src_img) / 255.0
     m, n = src_img.shape
+    # estimate sparsity level of image in transform domain
+    k = int(m * n * 0.05)
 
     # Generate image with missing pixels
     broken_img, holes = poke_holes(src_img, 0.3)
@@ -95,7 +97,7 @@ if __name__ == "__main__":
                               matvec=vec_dct, rmatvec=vec_idct)
 
     rec_d_vec, support_set = omp(
-        A @ C.adjoint(), broken_img.flatten(), 5000, 1e-2)
+        A @ C.adjoint(), broken_img.flatten(), k, 1e-2)
     rec_img_vec = vec_idct(rec_d_vec)
     rec_img = np.reshape(rec_img_vec, (m, n))
 

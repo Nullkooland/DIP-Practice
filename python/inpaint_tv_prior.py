@@ -14,7 +14,7 @@ def poke_holes(img, p):
 
 
 if __name__ == "__main__":
-    src_img = cv2.imread('./images/nightjar.png')
+    src_img = cv2.imread('./images/lena256.png')
     src_img = cv2.cvtColor(src_img, cv2.COLOR_BGR2RGB)
     src_img = np.float32(src_img) / 255.0
     l_tv = 1e-3
