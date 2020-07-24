@@ -29,9 +29,9 @@ def omp(A, b, max_iters=64, err_tol=1e-5):
         # Create select operator S (x -> x_supp)
         # Its adjoint is expand operator S_adj (x_supp -> x)
         def expand_support_to_full(x_supp):
-            x_full = np.zeros(n)
-            x_full[support_set] = x_supp
-            return x_full
+            x[:] = 0
+            x[support_set] = x_supp
+            return x
 
         S = sparse.LinearOperator((len(support_set), n),
                                   matvec=lambda x: x[support_set],
@@ -41,8 +41,7 @@ def omp(A, b, max_iters=64, err_tol=1e-5):
         # Solve the least-square problem min ||A(S_adj(x_supp)) - b||^2
         x_supp = sparse.lsmr(A @ S.adjoint(), b)[0]
         # Update x
-        x[:] = 0
-        x[support_set] = x_supp
+        x = expand_support_to_full(x_supp)
         # Make residual orthogonal to column space of A_supp
         r = b - A @ x
         # Calculate relative error
