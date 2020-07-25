@@ -3,7 +3,7 @@ import numpy as np
 
 BUFFER_SIZE = 3
 
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(1)
 h = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT) / 2)
 w = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH) / 2)
 
@@ -26,11 +26,11 @@ while True:
         frame_buffer[curr_i] = frame
         curr_i = (curr_i + 1) % BUFFER_SIZE
 
-    denoised = cv2.fastNlMeansDenoisingColoredMulti(
-        frame_buffer, 1, BUFFER_SIZE, h=7, hColor=10, templateWindowSize=3, searchWindowSize=11)
+    # denoised = cv2.fastNlMeansDenoisingColoredMulti(
+    #     frame_buffer, 1, BUFFER_SIZE, h=7, hColor=10, templateWindowSize=3, searchWindowSize=11)
 
-    # denoised = cv2.fastNlMeansDenoisingColored(
-    #     frame_buffer[curr_i], h=7, hColor=10, templateWindowSize=3, searchWindowSize=13)
+    denoised = cv2.fastNlMeansDenoisingColored(
+        frame_buffer[curr_i], h=7, hColor=10, templateWindowSize=3, searchWindowSize=13)
 
     tick.stop()
     fps = 1.0 / tick.getTimeSec()
