@@ -95,8 +95,8 @@ static void passDiagonal(const cv::Mat& imgLowRes, cv::Mat& imgHighRes,
                             // pixel into m-th row of matrix C
                             C(m, 0) = temp.at<float>(k - 1, l - 1);
                             C(m, 1) = temp.at<float>(k - 1, l + 1);
-                            C(m, 2) = temp.at<float>(k + 1, l - 1);
-                            C(m, 3) = temp.at<float>(k + 1, l + 1);
+                            C(m, 2) = temp.at<float>(k + 1, l + 1);
+                            C(m, 3) = temp.at<float>(k + 1, l - 1);
                             m++;
                         }
                     }
@@ -110,8 +110,8 @@ static void passDiagonal(const cv::Mat& imgLowRes, cv::Mat& imgHighRes,
                 imgHighRes.at<float>(iHi, jHi) =
                     w[0] * temp.at<float>(iLo + M / 2, jLo + M / 2) +
                     w[1] * temp.at<float>(iLo + M / 2, jLo + M / 2 + 1) +
-                    w[2] * temp.at<float>(iLo + M / 2 + 1, jLo + M / 2) +
-                    w[3] * temp.at<float>(iLo + M / 2 + 1, jLo + M / 2 + 1);
+                    w[2] * temp.at<float>(iLo + M / 2 + 1, jLo + M / 2 + 1) +
+                    w[3] * temp.at<float>(iLo + M / 2 + 1, jLo + M / 2);
             }
         });
 }
