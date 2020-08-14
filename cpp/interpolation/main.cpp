@@ -1,23 +1,26 @@
 #include <cmath>
 #include <iostream>
+#include <array>
 
 #include "opencv2/core.hpp"
 #include "opencv2/highgui.hpp"
 #include "opencv2/imgproc.hpp"
 
 #include "interp.hpp"
+#include "nedi.hpp"
 
 int main(int argc, char const* argv[]) {
     cv::namedWindow("Original", cv::WINDOW_AUTOSIZE);
-    cv::namedWindow("Zero Interpolation", cv::WINDOW_AUTOSIZE);
-    cv::namedWindow("Linear Interpolation", cv::WINDOW_AUTOSIZE);
-    cv::namedWindow("Lanczos Interpolation", cv::WINDOW_AUTOSIZE);
+    // cv::namedWindow("Zero Interpolation", cv::WINDOW_AUTOSIZE);
+    // cv::namedWindow("Linear Interpolation", cv::WINDOW_AUTOSIZE);
+    // cv::namedWindow("Lanczos Interpolation", cv::WINDOW_AUTOSIZE);
+    cv::namedWindow("NEDI", cv::WINDOW_AUTOSIZE);
 
-    constexpr int k = 3;
+    constexpr int k = 2;
 
-    cv::Mat src_img = cv::imread("./images/lena256.png");
+    cv::Mat src_img = cv::imread("./images/snow_leopard.png");
     cv::imshow("Original", src_img);
-
+/*
     cv::Mat zero_interp_img;
     interpZero(src_img, zero_interp_img, k);
 
@@ -53,6 +56,26 @@ int main(int argc, char const* argv[]) {
                     lanczos_kernel);
 
     cv::imshow("Lanczos Interpolation", lanczos_interp_img);
+*/
+
+    std::array<cv::Mat, 3> rgb_src;
+    std::array<cv::Mat, 3> rgb_NEDI;
+    cv::split(src_img, rgb_src);
+
+    for (size_t i = 0; i < 3; i++) {
+        NEDI(rgb_src[i], rgb_NEDI[i], 1, 0.0025f); 
+    }
+
+    cv::Mat img_NEDI;
+    cv::merge(rgb_NEDI, img_NEDI);
+
+    cv::imshow("NEDI", img_NEDI);
+
+    cv::Mat linear_interp_img;
+    cv::resize(src_img, linear_interp_img, cv::Size(-1, -1), 2.0, 2.0,
+               cv::INTER_LINEAR);
+
+    cv::imshow("Linear Interpolation", linear_interp_img);
 
     cv::waitKey();
     return 0;

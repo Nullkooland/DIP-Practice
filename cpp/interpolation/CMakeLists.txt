@@ -4,6 +4,8 @@ add_executable(${target_name}
     main.cpp
     interp.cpp
     interp.hpp
+    nedi.cpp
+    nedi.hpp
 )
 
 target_include_directories(${target_name} PRIVATE ${OpenCV_INCLUDE_DIRS})
