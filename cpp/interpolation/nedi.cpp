@@ -59,20 +59,6 @@ static void passDiagonal(const cv::Mat& imgLowRes, cv::Mat& imgHighRes,
                 auto C = cv::Matx<float, M * M, 4>();
                 auto y = cv::Vec<float, M * M>();
 
-                // Build functor to check if the interpolated pixel is on edge
-                auto isEdgePixel =
-                    [&localVariance](int i, int j,
-                                     float localVarianceThreshold) {
-                        return (localVariance.at<float>(i, j) >
-                                localVarianceThreshold) &&
-                               (localVariance.at<float>(i, j + 1) >
-                                localVarianceThreshold) &&
-                               (localVariance.at<float>(i + 1, j) >
-                                localVarianceThreshold) &&
-                               (localVariance.at<float>(i + 1, j + 1) >
-                                localVarianceThreshold);
-                    };
-
                 // For edge area, calculate diagonal interpolation
                 // weights using local edge-directed property
                 if (localVariance.at<float>(iLo, jLo) >
@@ -85,9 +71,8 @@ static void passDiagonal(const cv::Mat& imgLowRes, cv::Mat& imgHighRes,
                         localVarianceThreshold) {
 
                     int m = 0;
-                    for (int k = iLo - M / 2 + 1; k < iLo + M / 2 + 1; k++) {
-                        for (int l = jLo - M / 2 + 1; l < jLo + M / 2 + 1;
-                             l++) {
+                    for (int k = iLo + 1; k < iLo + 1 + M; k++) {
+                        for (int l = jLo + 1; l < jLo + 1 + M; l++) {
                             // Put the pixels within local window into
                             // vector y
                             y[m] = temp.at<float>(k, l);
@@ -102,7 +87,7 @@ static void passDiagonal(const cv::Mat& imgLowRes, cv::Mat& imgHighRes,
                     }
 
                     // Solve for interpolation weights
-                    cv::solve(C, y, w, cv::DECOMP_NORMAL);
+                    cv::solve(C, y, w, cv::DECOMP_NORMAL | cv::DECOMP_CHOLESKY);
                 }
 
                 // Calculate the new pixel from diagonal 4 pixels
@@ -178,7 +163,8 @@ static void passAxial(cv::Mat& imgHighRes, const cv::Mat& localVariance,
                     // Fill in C and y of current interpolated pixel on even row
                     processWindow(iHiEven, jHiEven, CEven, yEven);
                     // Solve for interpolation weights
-                    cv::solve(CEven, yEven, wEven, cv::DECOMP_NORMAL);
+                    cv::solve(CEven, yEven, wEven,
+                              cv::DECOMP_NORMAL | cv::DECOMP_CHOLESKY);
                 }
 
                 if (localVariance.at<float>(iLo, jLo) >
@@ -188,7 +174,8 @@ static void passAxial(cv::Mat& imgHighRes, const cv::Mat& localVariance,
                     // Fill in C and y of current interpolated pixel on odd row
                     processWindow(iHiOdd, jHiOdd, COdd, yOdd);
                     // Solve for interpolation weights
-                    cv::solve(COdd, yOdd, wOdd, cv::DECOMP_NORMAL);
+                    cv::solve(COdd, yOdd, wOdd,
+                              cv::DECOMP_NORMAL | cv::DECOMP_CHOLESKY);
                 }
 
                 auto interpolatePixel =
