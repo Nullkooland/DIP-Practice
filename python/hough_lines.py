@@ -2,16 +2,16 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 
-src_img = cv2.imread('./images/quiet_street.png')
+ANGLE_QUANT_LEVEL = 128
+
+src_img = cv2.imread('./images/boss_car_is_ready.png')
 h, w = src_img.shape[:2]
 
 src_img = cv2.cvtColor(src_img, cv2.COLOR_BGR2RGB)
-gray_img = cv2.cvtColor(src_img, cv2.COLOR_RGB2GRAY)
-gray_img[:,480:] = cv2.GaussianBlur(gray_img[:,480:], (5, 5), 1.2)
-edge_map = cv2.Canny(gray_img, 40, 120)
+edge_map = cv2.Canny(src_img, 40, 150)
 
 # standard Hough transform
-lines = cv2.HoughLines(edge_map, 1, np.pi / 128, 125)
+lines = cv2.HoughLines(edge_map, 1, np.pi / ANGLE_QUANT_LEVEL, 160)
 anno_img_SHT = src_img.copy()
 
 for line in lines:
@@ -24,21 +24,22 @@ for line in lines:
     y1 = int(y0 + h * w * a)
     x2 = int(x0 + h * w * b)
     y2 = int(y0 - h * w * a)
-    cv2.line(anno_img_SHT, (x1, y1), (x2, y2), (0, 255, 0), 2)
+    cv2.line(anno_img_SHT, (x1, y1), (x2, y2), (0, 255, 0), 1, cv2.LINE_AA)
 
 # probabilistic Hough transform
-lines = cv2.HoughLinesP(edge_map, 1, np.pi / 128, 75, minLineLength=60, maxLineGap=20)
+lines = cv2.HoughLinesP(edge_map, 1, np.pi / ANGLE_QUANT_LEVEL,
+                        60, minLineLength=80, maxLineGap=40)
 anno_img_PHT = src_img.copy()
 
 for line in lines:
     x1, y1, x2, y2 = line.flat
-    cv2.line(anno_img_PHT, (x1, y1), (x2, y2), (0, 255, 0), 2)
+    cv2.line(anno_img_PHT, (x1, y1), (x2, y2), (0, 255, 0), 1, cv2.LINE_AA)
 
 plt.figure('Hough Lines', figsize=(12, 8))
 
 plt.subplot(2, 2, 1)
 plt.imshow(src_img, cmap='gray')
-plt.title('\"It Almost Seems Too Quiet\" Street')
+plt.title('Ride On: \"Boss, car is ready!\"')
 
 plt.subplot(2, 2, 2)
 plt.imshow(edge_map, cmap='gray')
