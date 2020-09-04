@@ -1,5 +1,6 @@
 #include <array>
 #include <vector>
+#include <limits>
 #include <immintrin.h>
 
 #include "opencv2/core.hpp"
@@ -19,7 +20,7 @@ static inline int calcBGR888L1Norm(const uint8_t* a, const uint8_t* b) {
 static inline uint8_t getMedianFromHistogram(const Hist8b& hist,
                                              int threshold) {
     int count = 0;
-    uint8_t k = UINT8_MAX;
+    uint8_t k = std::numeric_limits<uint8_t>::max();
 
     do {
         count += hist[++k];
@@ -34,7 +35,7 @@ static void swfSelectMinError(const cv::Mat& src, cv::Mat& dst,
         [&src, &filteredBySides](cv::Vec3b& pixel, const int pos[]) {
             int y = pos[0];
             int x = pos[1];
-            int minError = INT_MAX;
+            int minError = std::numeric_limits<int>::max();
             int k = -1;
 
             // ||     L     ||     R     ||    U      ||...
