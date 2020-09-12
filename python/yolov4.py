@@ -26,7 +26,7 @@ if __name__ == "__main__":
         names = f.read().splitlines()
 
     # Prepare camera
-    cap = cv2.VideoCapture(1)
+    cap = cv2.VideoCapture(0)
     h = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
     w = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
     box_scale = np.array([w, h, w, h])
@@ -84,6 +84,10 @@ if __name__ == "__main__":
                 class_ids[num_detection] = class_id
                 num_detection += 1
 
+        # Draw FPS
+        cv2.putText(frame, f'FPS: {1.0/infer_time:.2f}', (32, 32),
+                    cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0, 255, 0), 2, lineType=cv2.LINE_AA)
+
         if num_detection == 0:
             cv2.imshow('YOLO v4', frame)
             continue
@@ -116,8 +120,6 @@ if __name__ == "__main__":
             cv2.putText(frame, f'{name}: {confidence * 100:.1f}%', (x, y - 8),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.5, (b, g, r), 1, lineType=cv2.LINE_AA)
 
-        cv2.putText(frame, f'FPS: {1.0/infer_time:.2f}', (32, 32),
-                    cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0, 255, 0), 2, lineType=cv2.LINE_AA)
-        cv2.imshow('YOLO v4 Tiny', frame)
+        cv2.imshow('YOLO v4', frame)
 
     cv2.destroyAllWindows()
