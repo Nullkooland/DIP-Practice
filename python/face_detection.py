@@ -27,9 +27,13 @@ while (True):
 
     # Capture one frame
     ret, frame = cap.read()
-    # frame = cv2.resize(cv2.UMat(frame), (640, 360),
+    if not ret:
+        continue
+
+    # frame = cv2.resize(frame, (1920, 1080),
     #                    interpolation=cv2.INTER_AREA)
     # frame = cv2.UMat(frame)
+
     tick.reset()
     tick.start()
     # Convert color to grayscale
@@ -46,14 +50,6 @@ while (True):
     for (x, y, w, h) in faces:
         cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 0, 255), 2)
 
-        roi_face = frame[y:y + h, x:x + w]
-        roi_face_gray = gray[y:y + h, x:x + w]
-        eyes = eye_detector.detectMultiScale(roi_face_gray)
-
-        for (x_e, y_e, w_e, h_e) in eyes:
-            cv2.rectangle(roi_face, (x_e, y_e),
-                          (x_e + w_e, y_e + h_e), (255, 255, 0), 2)
-
     tick.stop()
     fps = 1.0 / tick.getTimeSec()
 
@@ -65,7 +61,7 @@ while (True):
     # cv2.imshow('Blending', blend)
 
     # Wait for exit
-    if cv2.waitKey(16) & 0xFF == ord('q'):
+    if cv2.waitKey(20) & 0xFF == ord('q'):
         break
 
 # We're done
