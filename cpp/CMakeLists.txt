@@ -6,7 +6,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 add_compile_options(-Wall -mavx -mavx2 -mfma -msse -msse2 -msse3)
 
 project(opencv_fun)
-find_package(cxxopts REQUIRED)
+find_package(argparse REQUIRED)
 find_package(OpenCV REQUIRED)
 
 add_subdirectory(side_window_filtering)
