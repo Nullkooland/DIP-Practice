@@ -26,15 +26,15 @@ dist_linf = cv2.distanceTransform(mask, cv2.DIST_C, cv2.DIST_MASK_5)
 
 plt.figure('Distance Transform', figsize=(12, 4))
 plt.subplot(1, 3, 1)
-plt.imshow(dist_l2)
+plt.imshow(dist_l2, cmap='inferno')
 plt.title(r'$L_2$' + ' (Euclidean Distance)')
 
 plt.subplot(1, 3, 2)
-plt.imshow(dist_l1)
+plt.imshow(dist_l1, cmap='inferno')
 plt.title(r'$L_1$' + ' (City Distance)')
 
 plt.subplot(1, 3, 3)
-plt.imshow(dist_linf)
+plt.imshow(dist_linf, cmap='inferno')
 plt.title(r'$L_\infty$' + ' (Checkerboard Distance)')
 
 plt.tight_layout()
