@@ -1,13 +1,16 @@
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.18)
+project(opencv_fun)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 add_compile_options(-Wall -mavx -mavx2 -mfma -msse -msse2 -msse3)
 
-project(opencv_fun)
 find_package(argparse REQUIRED)
 find_package(OpenCV REQUIRED)
+
+find_package(PkgConfig REQUIRED)
+pkg_search_module(HEIF REQUIRED libheif)
 
 add_subdirectory(side_window_filtering)
 add_subdirectory(interpolation)

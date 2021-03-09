@@ -1,7 +1,10 @@
 #include <cmath>
 #include <iostream>
 #include <array>
+#include <opencv2/core/mat.hpp>
 
+#include "libheif/heif.h"
+#include "libheif/heif_cxx.h"
 #include "opencv2/core.hpp"
 #include "opencv2/highgui.hpp"
 #include "opencv2/imgproc.hpp"
@@ -18,7 +21,21 @@ int main(int argc, char const* argv[]) {
 
     constexpr int k = 2;
 
-    cv::Mat src_img = cv::imread("./images/snow_leopard.png");
+    auto heifCtx = heif::Context();
+    heifCtx.read_from_file("./images/snow_leopard.heic");
+    auto heifHandle = heifCtx.get_primary_image_handle();
+    auto heifImage = heifHandle.decode_image(heif_colorspace_RGB,
+                                             heif_chroma_interleaved_RGB);
+    int width = heifImage.get_width(heif_channel_interleaved);
+    int height = heifImage.get_height(heif_channel_interleaved);
+    
+    int stride;
+    uint8_t *pixels = heifImage.get_plane(heif_channel_interleaved, &stride);
+
+    auto src_img = cv::Mat(height, width, CV_8UC3, pixels, stride);
+    cv::cvtColor(src_img, src_img, cv::COLOR_RGB2BGR);
+
+    // cv::Mat src_img = cv::imread("./images/snow_leopard.png");
     cv::imshow("Original", src_img);
 /*
     cv::Mat zero_interp_img;

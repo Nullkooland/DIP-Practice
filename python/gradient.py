@@ -1,12 +1,12 @@
 import cv2
 import numpy as np
+import pyheif
 import matplotlib.pyplot as plt
 from matplotlib.cm import ScalarMappable
 from matplotlib.colors import Normalize
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 
-src_img = cv2.imread('./images/monarch.png')
-src_img = cv2.cvtColor(src_img, cv2.COLOR_BGR2RGB)
+src_img = pyheif.read_as_numpy('./images/monarch.heic')
 gray_img = cv2.cvtColor(src_img, cv2.COLOR_RGB2GRAY)
 
 grad_x = cv2.Scharr(gray_img, cv2.CV_32F, 1, 0)

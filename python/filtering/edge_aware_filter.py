@@ -1,10 +1,10 @@
 import cv2
 import numpy as np
+import pyheif
 import matplotlib.pyplot as plt
 
 if __name__ == "__main__":
-    img_src = cv2.imread('./images/trek.png')
-    img_src = cv2.cvtColor(img_src, cv2.COLOR_BGR2RGB)
+    img_src = pyheif.read_as_numpy('./images/trek.heic')
 
     img_sketch, img_sketch = cv2.pencilSketch(
         img_src, None, None, 50, 0.08, 0.05)

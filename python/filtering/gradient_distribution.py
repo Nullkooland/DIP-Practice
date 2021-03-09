@@ -1,5 +1,6 @@
 import numpy as np
 import cv2
+import pyheif
 import matplotlib.pyplot as plt
 
 plt.style.use('science')
@@ -10,14 +11,15 @@ NUM_HIST_BIN = 2048
 RANGE_HIST = (-5, 5)
 
 if __name__ == "__main__":
-    src_img = cv2.imread('./images/city.png', cv2.IMREAD_GRAYSCALE)
-    src_img = np.float32(src_img) / 255.0
-    M, N = src_img.shape
+    img_src = pyheif.read_as_numpy('./images/city.heic')
+    img_src = cv2.cvtColor(img_src, cv2.COLOR_RGB2GRAY)
+    img_src = np.float32(img_src) / 255.0
+    M, N = img_src.shape
 
-    blurred_img = cv2.GaussianBlur(src_img, (9, 9), 0)
-    noised_img = src_img + np.random.randn(M, N).astype(np.float32) * STD_NOISE
+    img_blurred = cv2.GaussianBlur(img_src, (9, 9), 0)
+    img_noised = img_src + np.random.randn(M, N).astype(np.float32) * STD_NOISE
 
-    imgs = np.stack((src_img, blurred_img, noised_img))
+    imgs = np.stack((img_src, img_blurred, img_noised))
     gradient_hists = np.empty((NUM_IMG, NUM_HIST_BIN))
 
     hist_channels = np.zeros(NUM_IMG, dtype=int)
