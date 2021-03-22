@@ -1,4 +1,5 @@
 import cv2
+import pyheif
 import numpy as np
 import matplotlib.pyplot as plt
 import pyheif
@@ -8,7 +9,7 @@ if __name__ == "__main__":
     img_src_0 = pyheif.read_as_numpy("./images/sleepy_cat_scale_0.heic")
     img_src_1 = pyheif.read_as_numpy("./images/sleepy_cat_scale_1.heic")
     mask_1 = pyheif.read_as_numpy(
-        './images/sleepy_cat_mask_scale_1.heic')
+        "./images/sleepy_cat_mask_scale_1.heic")
     mask_1 = cv2.cvtColor(mask_1, cv2.COLOR_RGB2GRAY)
 
     # Get keypoints and feature descriptors using ORB algorithm
@@ -37,7 +38,7 @@ if __name__ == "__main__":
         flags=cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
 
     # Show matches
-    plt.figure('ORB Matches', figsize=(14, 6))
+    plt.figure("ORB Matches", figsize=(14, 6))
     plt.imshow(img_matches)
 
     plt.show()

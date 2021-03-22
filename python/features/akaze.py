@@ -1,4 +1,5 @@
 import cv2
+import pyheif
 import numpy as np
 import matplotlib.pyplot as plt
 import pyheif
@@ -34,7 +35,7 @@ if __name__ == "__main__":
         flags=cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
 
     # Show matches
-    plt.figure('AKAZE Matches', figsize=(14, 6))
+    plt.figure("AKAZE Matches", figsize=(14, 6))
     plt.imshow(img_matches)
 
     plt.show()

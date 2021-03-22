@@ -1,16 +1,17 @@
 import numpy as np
 import cv2
+import pyheif
 
-FEATURES_FILES_DIR = '/usr/local/share/opencv4/haarcascades/'
-FACE_FEATURES_FILE = 'haarcascade_frontalface_alt.xml'
-EYE_FEATURES_FILE = 'haarcascade_eye.xml'
-SMILE_FEATURES_FILE = 'haarcascade_smile.xml'
+FEATURES_FILES_DIR = "/usr/local/share/opencv4/haarcascades/"
+FACE_FEATURES_FILE = "haarcascade_frontalface_alt.xml"
+EYE_FEATURES_FILE = "haarcascade_eye.xml"
+SMILE_FEATURES_FILE = "haarcascade_smile.xml"
 
 # Prepare this shitty 720P camera on my MBP
 cap = cv2.VideoCapture(1)
 w = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
 h = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-print(f'Video input size:{w}x{h}')
+print(f"Video input size:{w}x{h}")
 
 # Prepare the detectors
 face_detector = cv2.CascadeClassifier(FEATURES_FILES_DIR + FACE_FEATURES_FILE)
@@ -18,7 +19,7 @@ eye_detector = cv2.CascadeClassifier(FEATURES_FILES_DIR + EYE_FEATURES_FILE)
 smile_detector = cv2.CascadeClassifier(
     FEATURES_FILES_DIR + SMILE_FEATURES_FILE)
 
-background = cv2.imread('./images/loquat_painting.png')
+background = pyheif.read_as_numpy("./images/loquat_painting.heic")
 bg_height, bg_width, _ = background.shape
 
 tick = cv2.TickMeter()
@@ -53,12 +54,12 @@ while (True):
     tick.stop()
     fps = 1.0 / tick.getTimeSec()
 
-    cv2.putText(frame, f'FPS: {fps:.2f}', (10, 20),
+    cv2.putText(frame, f"FPS: {fps:.2f}", (10, 20),
                 cv2.FONT_HERSHEY_PLAIN, 1.25, (0, 255, 0), 1, lineType=cv2.LINE_AA)
 
     # Show frame
-    cv2.imshow('Face Detection', frame)
-    # cv2.imshow('Blending', blend)
+    cv2.imshow("Face Detection", frame)
+    # cv2.imshow("Blending", blend)
 
     # Wait for exit
     if cv2.waitKey(20) & 0xFF == ord('q'):
@@ -67,4 +68,4 @@ while (True):
 # We're done
 cap.release()
 cv2.destroyAllWindows()
-print('我好了')
+print("我好了")

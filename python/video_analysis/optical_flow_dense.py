@@ -26,8 +26,8 @@ if __name__ == "__main__":
         flow_hsv[..., 2] = cv2.normalize(mag_flow, None, 0, 255, cv2.NORM_MINMAX, dtype=cv2.CV_8U)
         flow_bgr = cv2.cvtColor(flow_hsv, cv2.COLOR_HSV2BGR_FULL)
 
-        cv2.imshow('Frame', frame)
-        cv2.imshow('Optical flow', flow_bgr)
+        cv2.imshow("Frame", frame)
+        cv2.imshow("Optical flow", flow_bgr)
         
 
     cap.release()

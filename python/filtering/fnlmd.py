@@ -1,4 +1,5 @@
 import cv2
+import pyheif
 import numpy as np
 
 BUFFER_SIZE = 3
@@ -35,11 +36,11 @@ while True:
     tick.stop()
     fps = 1.0 / tick.getTimeSec()
 
-    cv2.imshow('Original', frame_buffer[curr_i])
+    cv2.imshow("Original", frame_buffer[curr_i])
 
-    cv2.putText(denoised, f'FPS: {fps:.2f}', (10, 20),
+    cv2.putText(denoised, f"FPS: {fps:.2f}", (10, 20),
                 cv2.FONT_HERSHEY_PLAIN, 1.25, (0, 255, 0), 1, lineType=cv2.LINE_AA)
-    cv2.imshow('Denoised', denoised)
+    cv2.imshow("Denoised", denoised)
 
     curr_i = (curr_i + 1) % BUFFER_SIZE
 

@@ -1,11 +1,12 @@
 import cv2
+import pyheif
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.animation import ArtistAnimation
 from matplotlib.animation import FuncAnimation
 
 PATCH_SIZE = 8
-plt.style.use('science')
+plt.style.use("science")
 
 def img2patches(img, h, w, patch_size):
     patches = np.empty((h * w // (patch_size ** 2),
@@ -40,8 +41,8 @@ def snr(a, b):
 
 
 if __name__ == "__main__":
-    src_img = cv2.imread('./images/trek.png')
-    gray_img = cv2.cvtColor(src_img, cv2.COLOR_BGR2GRAY)
+    src_img = pyheif.read_as_numpy("./images/river2.heic")
+    gray_img = cv2.cvtColor(src_img, cv2.COLOR_RGB2GRAY)
     gray_img = np.float32(gray_img) / 255.0
     h, w = gray_img.shape
 
@@ -54,11 +55,11 @@ if __name__ == "__main__":
 
     sample_range = np.arange(PATCH_SIZE ** 2)
 
-    fig1 = plt.figure(num='SNR', figsize=(8, 4))
+    fig1 = plt.figure(num="SNR", figsize=(8, 4))
     ax_plot = plt.gca()
     ax_plot.set_xlim(0, PATCH_SIZE ** 2)
-    ax_plot.set_xlabel('k')
-    ax_plot.set_ylabel('SNR (dB)')
+    ax_plot.set_xlabel("k")
+    ax_plot.set_ylabel("SNR (dB)")
     ax_plot.grid()
 
     snr_dft = np.full(len(sample_range), np.nan)
@@ -69,23 +70,23 @@ if __name__ == "__main__":
     snr_dct_line, = ax_plot.plot(sample_range, snr_dct)
     snr_svd_line, = ax_plot.plot(sample_range, snr_svd)
 
-    snr_dft_line.set_label('DFT')
-    snr_dct_line.set_label('DCT')
-    snr_svd_line.set_label('SVD')
+    snr_dft_line.set_label("DFT")
+    snr_dct_line.set_label("DCT")
+    snr_svd_line.set_label("SVD")
 
     ax_plot.legend()
 
     optimal_basis = patches2img(
         vt, PATCH_SIZE ** 2, PATCH_SIZE ** 2, PATCH_SIZE)
 
-    # plt.figure('Optimal basis')
+    # plt.figure("Optimal basis")
     # plt.imshow(optimal_basis)
 
     # for i in range(1, PATCH_SIZE):
     #     plt.plot([0, PATCH_SIZE ** 2],
-    #              [i * PATCH_SIZE, i * PATCH_SIZE], color='red')
+    #              [i * PATCH_SIZE, i * PATCH_SIZE], color="red")
     #     plt.plot([i * PATCH_SIZE, i * PATCH_SIZE],
-    #              [0, PATCH_SIZE ** 2], color='red')
+    #              [0, PATCH_SIZE ** 2], color="red")
 
     # plt.axis([0, PATCH_SIZE ** 2, 0, PATCH_SIZE ** 2])
     # plt.show()
@@ -94,11 +95,11 @@ if __name__ == "__main__":
     # patches_dft_partial = np.empty_like(patches_dft)
     # u_partial = np.empty_like(u)
 
-    fig2, axs = plt.subplots(1, 3, num='Reconstruction', figsize=(12, 4))
+    fig2, axs = plt.subplots(1, 3, num="Reconstruction", figsize=(12, 4))
 
-    axs[0].set_title('DFT')
-    axs[1].set_title('DCT')
-    axs[2].set_title('SVD')
+    axs[0].set_title("DFT")
+    axs[1].set_title("DCT")
+    axs[2].set_title("SVD")
 
     im_dft = axs[0].imshow(gray_img, animated=True)
     im_dct = axs[1].imshow(gray_img, animated=True)

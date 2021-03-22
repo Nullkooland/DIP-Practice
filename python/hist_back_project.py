@@ -1,82 +1,129 @@
 import cv2
+import depthai as dai
+import pyheif
 import numpy as np
 import matplotlib.pyplot as plt
 
-AB_BINS = 24
-AB_RANGE_LOW = 128
-AB_RANGE_HIGH = 152
+HIST_BINS = 10
+A_RANGE_LOW = 130
+A_RANGE_HIGH = 154
+B_RANGE_LOW = 130
+B_RANGE_HIGH = 150
 
-img_template = cv2.imread('./images/hand.png')
-mask_template = cv2.imread('./images/hand_mask.png', cv2.IMREAD_GRAYSCALE)
-img_template = cv2.bitwise_and(img_template, (255, 255, 255), mask=mask_template)
+HIST_RANGE_LOW = 100
+HIST_RANGE_HIGH = 180
 
-cv2.imshow('Template', img_template)
+USE_OAK1 = True
 
-img_src = cv2.imread('./images/trek.png')
-cv2.imshow('Image to Match', img_src)
 
-cv2.waitKey()
+img_src = pyheif.read_as_numpy("./images/trek.heic")
+img_template = pyheif.read_as_numpy("./images/hand.heic")
+mask_template = img_template[..., 3]
+img_template = img_template[..., :3]
 
-lab_template = cv2.cvtColor(img_template, cv2.COLOR_BGR2LAB)
+se = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (9, 9))
+mask_template = cv2.morphologyEx(
+    mask_template, cv2.MORPH_OPEN, se, iterations=3)
 
-hist_l = cv2.calcHist([lab_template], [0], mask_template, [256], [0, 256])
+img_template = cv2.bitwise_and(
+    img_template, (255, 255, 255), mask=mask_template)
+
+fig0, axs = plt.subplots(1, 3, figsize=(18, 6))
+
+axs[0].imshow(img_template)
+axs[0].set_title("Template")
+
+axs[1].imshow(img_src)
+axs[1].set_title("Image to Match")
+
+lab_template = cv2.cvtColor(img_template, cv2.COLOR_RGB2LAB)
+
+hist_L = cv2.calcHist([lab_template], [0], mask_template, [256], [0, 256])
 hist_a = cv2.calcHist([lab_template], [1], mask_template, [256], [0, 256])
 hist_b = cv2.calcHist([lab_template], [2], mask_template, [256], [0, 256])
 
-hist_ab = cv2.calcHist([lab_template], [1, 2], None, [AB_BINS, AB_BINS], [
-                       AB_RANGE_LOW, AB_RANGE_HIGH, AB_RANGE_LOW, AB_RANGE_HIGH])
+hist_ab = cv2.calcHist([lab_template], [1, 2], None, [HIST_BINS, HIST_BINS], [
+    A_RANGE_LOW, A_RANGE_HIGH, B_RANGE_LOW, B_RANGE_HIGH])
+
 # hist_ab = cv2.normalize(hist_ab, 0, 1, norm_type=cv2.NORM_L1)
 
-plt.figure('Lab Histogram', figsize=(10, 4))
+# np.save("output/skin_BA_hist.npy", hist_ab)
+plt.figure("Lab Histogram", figsize=(10, 4))
 
 plt.subplot(1, 2, 1)
 x = np.arange(256)
-plt.plot(x, hist_l, color='black')
-plt.legend('L')
+plt.plot(x, hist_L, color="black")
+plt.legend("L")
 
 plt.subplot(1, 2, 2)
-x = np.arange(AB_RANGE_LOW, AB_RANGE_HIGH)
-plt.plot(x, hist_a[AB_RANGE_LOW:AB_RANGE_HIGH], color='y')
-plt.plot(x, hist_b[AB_RANGE_LOW:AB_RANGE_HIGH], color='c')
-plt.legend(['A', 'B'])
-plt.xlim([AB_RANGE_LOW, AB_RANGE_HIGH])
+x = np.arange(HIST_RANGE_LOW, HIST_RANGE_HIGH)
+plt.plot(x, hist_a[HIST_RANGE_LOW:HIST_RANGE_HIGH], color="magenta")
+plt.plot(x, hist_b[HIST_RANGE_LOW:HIST_RANGE_HIGH], color="yellow")
+plt.legend(["a", "b"])
+plt.xlim([HIST_RANGE_LOW, HIST_RANGE_HIGH])
 
 plt.tight_layout()
+
+
+src_lab = cv2.cvtColor(img_src, cv2.COLOR_RGB2LAB)
+match = cv2.calcBackProject([src_lab], [1, 2], hist_ab, [
+                            A_RANGE_LOW, A_RANGE_HIGH, B_RANGE_LOW, B_RANGE_HIGH], scale=1)
+
+axs[2].imshow(match, cmap="hot")
+axs[2].set_title("Match")
+
 plt.show()
 
-src_lab = cv2.cvtColor(img_src, cv2.COLOR_BGR2LAB)
-match = cv2.calcBackProject([src_lab], [1, 2], hist_ab, [
-                            AB_RANGE_LOW, AB_RANGE_HIGH, AB_RANGE_LOW, AB_RANGE_HIGH], scale=1)
 
-match = cv2.applyColorMap(match, cv2.COLORMAP_HOT)
-cv2.imshow('Back Project', match)
-cv2.waitKey()
+# Start defining a pipeline
+pipeline = dai.Pipeline()
 
+# Define a source - color camera
+cam_rgb = pipeline.createColorCamera()
+cam_rgb.setBoardSocket(dai.CameraBoardSocket.RGB)
+cam_rgb.setResolution(
+    dai.ColorCameraProperties.SensorResolution.THE_1080_P)
+cam_rgb.setInterleaved(True)
+cam_rgb.setColorOrder(dai.ColorCameraProperties.ColorOrder.RGB)
 
-cap = cv2.VideoCapture(0)
-# frame_buffer = np.empty((3, 720, AB_RANGE_LOW0, 3), dtype=np.uint8)
-# i = 0
-pre_match = np.zeros((720, 1280), dtype=np.uint8)
+# Aeate output
+xout_rgb = pipeline.createXLinkOut()
+xout_rgb.setStreamName("rgb")
+cam_rgb.video.link(xout_rgb.input)
 
-while True:
-    _, frame = cap.read()
-    # frame = cv2.pyrDown(frame)
-    frame = cv2.medianBlur(frame, 3)
+# Pipeline defined, now the device is connected to
+with dai.Device(pipeline) as device:
+    # Start pipeline
+    device.startPipeline()
 
-    cv2.imshow('Frame', frame)
+    # Output queue will be used to get the rgb frames from the output defined above
+    q_rgb = device.getOutputQueue(name="rgb", maxSize=8, blocking=False)
 
-    frame_lab = cv2.cvtColor(frame, cv2.COLOR_BGR2LAB)
-    match = cv2.calcBackProject([frame_lab], [1, 2], hist_ab, [
-                                AB_RANGE_LOW, AB_RANGE_HIGH, AB_RANGE_LOW, AB_RANGE_HIGH], scale=1)
+    frame_bgr = np.zeros((1080, 1920, 3), dtype=np.uint8)
+    frame_lab = np.zeros((1080, 1920, 3), dtype=np.uint8)
+    mask = np.zeros((1080, 1920), dtype=np.uint8)
+    se = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5))
 
-    # match |= pre_match
-    # pre_match = match
+    while True:
+        in_rgb = q_rgb.get()  # blocking call, will wait until a new data has arrived
 
-    mask = cv2.applyColorMap(match, cv2.COLORMAP_BONE)
-    mask[match < 8] = 0
-    cv2.imshow('Back Project', mask)
+        # Retrieve 'bgr' (opencv format) frame
+        frame_bgr = in_rgb.getCvFrame()
 
-    if cv2.waitKey(16) & 0xFF == ord('q'):
-        break
+        cv2.medianBlur(frame_bgr, ksize=3, dst=frame_bgr)
+        cv2.cvtColor(frame_bgr, cv2.COLOR_BGR2LAB, dst=frame_lab)
+
+        match = cv2.calcBackProject([frame_lab], [1, 2], hist_ab, [
+            A_RANGE_LOW, A_RANGE_HIGH, B_RANGE_LOW, B_RANGE_HIGH], scale=1)
+
+        cv2.threshold(match, 200, 255, cv2.THRESH_BINARY, dst=mask)
+        cv2.morphologyEx(mask, cv2.MORPH_OPEN, se, dst=mask)
+        cv2.morphologyEx(mask, cv2.MORPH_CLOSE, se, dst=mask)
+
+        cv2.imshow("Frame", frame_bgr)
+        cv2.imshow("Back Project", mask)
+
+        if cv2.waitKey(16) & 0xFF == ord('q'):
+            break
 
 cv2.destroyAllWindows()

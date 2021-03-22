@@ -6,7 +6,7 @@ DONT_YOU_EVER_STOP_BEGIN = 11402
 DONT_YOU_EVER_STOP_END = 11714
 
 if __name__ == "__main__":
-    cap = cv2.VideoCapture('./videos/rideon_x264.mp4')
+    cap = cv2.VideoCapture("./videos/rideon_x264.mp4")
 
     # don't you ever stop!!!
     cap.set(cv2.CAP_PROP_POS_FRAMES, DONT_YOU_EVER_STOP_BEGIN)
@@ -14,12 +14,12 @@ if __name__ == "__main__":
     M = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
     N = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
     fps = cap.get(cv2.CAP_PROP_FPS)
-    fourcc_vals = bytearray(struct.pack('i', int(cap.get(cv2.CAP_PROP_FOURCC))))
-    print([ f'{chr(c)}' for c in fourcc_vals ])
+    fourcc_vals = bytearray(struct.pack("i", int(cap.get(cv2.CAP_PROP_FOURCC))))
+    print([ f"{chr(c)}" for c in fourcc_vals ])
 
     # Define the codec and create VideoWriter object
-    # fourcc = cv2.VideoWriter_fourcc(*'H264')
-    # out = cv2.VideoWriter('$HOME/Movies/rideon_polar.mp4', fourcc, 30, (N, M), True)
+    # fourcc = cv2.VideoWriter_fourcc(*"H264")
+    # out = cv2.VideoWriter("$HOME/Movies/rideon_polar.mp4", fourcc, 30, (N, M), True)
 
     # assert out.isOpened()
     frame_pos = DONT_YOU_EVER_STOP_BEGIN
@@ -35,7 +35,7 @@ if __name__ == "__main__":
         polar_img = cv2.logPolar(
             frame, (N // 2, M // 2), 274, cv2.WARP_FILL_OUTLIERS | cv2.INTER_CUBIC)
 
-        cv2.imshow('Ride On!!!', polar_img)
+        cv2.imshow("Ride On!!!", polar_img)
         # out.write(polar_img)
 
         frame_pos += 1

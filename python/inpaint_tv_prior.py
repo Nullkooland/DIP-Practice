@@ -1,5 +1,6 @@
 import numpy as np
 import cv2
+import pyheif
 import matplotlib.pyplot as plt
 import scipy.sparse.linalg as sparse_linalg
 from scipy.sparse.linalg import LinearOperator
@@ -14,7 +15,7 @@ def poke_holes(img, p):
 
 
 if __name__ == "__main__":
-    src_img = cv2.imread('./images/lena256.png')
+    src_img = pyheif.read_as_numpy("./images/lena256.heic")
     src_img = cv2.cvtColor(src_img, cv2.COLOR_BGR2RGB)
     src_img = np.float32(src_img) / 255.0
     l_tv = 1e-3
@@ -67,12 +68,12 @@ if __name__ == "__main__":
     rec_img = np.reshape(rec_img_vec, (m, n, c))
 
     # Plot the broken vs. recovered results
-    fig, axs = plt.subplots(1, 2, num='Result', figsize=(12, 6))
+    fig, axs = plt.subplots(1, 2, num="Result", figsize=(12, 6))
 
     axs[0].imshow(broken_img)
-    axs[0].set_title('Broken')
+    axs[0].set_title("Broken")
 
     axs[1].imshow(rec_img)
-    axs[1].set_title('Recovered')
+    axs[1].set_title("Recovered")
 
     plt.show()

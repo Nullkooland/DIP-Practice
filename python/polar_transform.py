@@ -1,4 +1,5 @@
 import cv2
+import pyheif
 import numpy as np
 import matplotlib.pyplot as plt
 import math
@@ -23,32 +24,32 @@ polar_img = cv2.warpPolar(img, (512, 512), (256, 256),
 log_max_range = M * math.log(max_range)
 log_polar_img = cv2.logPolar(img, (256, 256), M, cv2.INTER_CUBIC)
 
-plt.figure('Polar Mapping', figsize=(16, 6))
+plt.figure("Polar Mapping", figsize=(16, 6))
 
 plt.subplot(1, 3, 1)
 plt.imshow(img)
 
-plt.title('Original')
-plt.xlabel(r'$x$')
-plt.ylabel(r'$y$')
+plt.title("Original")
+plt.xlabel(r"$x$")
+plt.ylabel(r"$y$")
 plt.xticks(np.arange(0, 513, 64))
 plt.yticks(np.arange(0, 513, 64))
 
 plt.subplot(1, 3, 2)
 plt.imshow(polar_img, extent=[0, max_range, 360, 0], aspect=max_range/360)
 
-plt.title('Polar')
-plt.xlabel(r'$\rho$')
-plt.ylabel(r'$\theta$')
+plt.title("Polar")
+plt.xlabel(r"$\rho$")
+plt.ylabel(r"$\theta$")
 plt.xticks(np.arange(0, max_range, 32))
 plt.yticks(np.arange(0, 361, 45))
 
 plt.subplot(1, 3, 3)
 plt.imshow(log_polar_img, extent=[0, 512, 360, 0], aspect=512/360) # this is why matplotlib sucks
 
-plt.title('Log Polar')
-plt.xlabel(fr'{M} $\ln\rho$')
-plt.ylabel(r'$\theta$')
+plt.title("Log Polar")
+plt.xlabel(fr"{M} $\ln\rho$")
+plt.ylabel(r"$\theta$")
 plt.xticks(np.arange(0, log_max_range, 50))
 plt.yticks(np.arange(0, 361, 45))
 

@@ -1,4 +1,5 @@
 import cv2
+import pyheif
 import numpy as np
 import matplotlib.pyplot as plt
 import pyheif
@@ -10,9 +11,9 @@ if __name__ == "__main__":
     img_src_1 = pyheif.read_as_numpy("./images/sleepy_cat_scale_1.heic")
     img_src_2 = pyheif.read_as_numpy("./images/sleepy_cat_scale_2.heic")
     mask_1 = pyheif.read_as_numpy(
-        './images/sleepy_cat_mask_scale_1.heic')
+        "./images/sleepy_cat_mask_scale_1.heic")
     mask_2 = pyheif.read_as_numpy(
-        './images/sleepy_cat_mask_scale_2.heic')
+        "./images/sleepy_cat_mask_scale_2.heic")
 
     mask_1 = cv2.cvtColor(mask_1, cv2.COLOR_RGB2GRAY)
     mask_2 = cv2.cvtColor(mask_2, cv2.COLOR_RGB2GRAY)
@@ -30,7 +31,7 @@ if __name__ == "__main__":
         img_src_2, keypoints_2, None, (255, 0, 0), flags=cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
 
     fig_kp, (ax_kp_a, ax_kp_b) = plt.subplots(
-        1, 2, num='Keypoints', sharey=True, figsize=(14, 6))
+        1, 2, num="Keypoints", sharey=True, figsize=(14, 6))
 
     ax_kp_a.imshow(img_anno_1)
     ax_kp_b.imshow(img_anno_2)
@@ -55,7 +56,7 @@ if __name__ == "__main__":
                                      matches, None,  matchesMask=mask_matches,
                                      flags=cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
 
-    plt.figure('SIFT Matches', figsize=(14, 6))
+    plt.figure("SIFT Matches", figsize=(14, 6))
     plt.imshow(img_matches)
 
     plt.show()

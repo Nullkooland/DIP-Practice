@@ -1,12 +1,13 @@
 import cv2
+import pyheif
 import numpy as np
 import matplotlib.pyplot as plt
 
-src_img = cv2.imread('./images/corn_kernels.png', cv2.IMREAD_UNCHANGED)
+src_img = pyheif.read_as_numpy("./images/corn_kernels.heic")
 h, w = src_img.shape[:2]
 
 mask = src_img[..., 3]
-src_img = cv2.cvtColor(src_img[...,:3], cv2.COLOR_BGR2RGB)
+src_img = src_img[...,:3]
 gray_img = cv2.cvtColor(src_img, cv2.COLOR_RGB2GRAY)
 gray_img = cv2.equalizeHist(gray_img)
 gray_img = np.repeat(gray_img[..., np.newaxis], 3, axis=2)
@@ -36,27 +37,27 @@ morph_edge = mask - morph_mask
 dist_markers[dist_edge != 0] = 0
 morph_markers[morph_edge != 0] = 0
 
-plt.figure('Corn!', figsize=(12, 8))
-sm = plt.cm.ScalarMappable(cmap='nipy_spectral')
+plt.figure("Corn!", figsize=(12, 8))
+sm = plt.cm.ScalarMappable(cmap="nipy_spectral")
 cmap = sm.to_rgba(np.linspace(0, 1, n_cc + 1), bytes=True)[:,:3]
 cmap[0, :] = 255
 cmap[1, :] = 0
 
 plt.subplot(2, 3, 1)
 plt.imshow(src_img)
-plt.title('Original')
+plt.title("Original")
 
 plt.subplot(2, 3, 4)
-plt.imshow(mask, cmap='gray')
-plt.title('Original Mask')
+plt.imshow(mask, cmap="gray")
+plt.title("Original Mask")
 
 plt.subplot(2, 3, 2)
-plt.imshow(dist_markers, cmap='nipy_spectral')
-plt.title('Distance Threshold')
+plt.imshow(dist_markers, cmap="nipy_spectral")
+plt.title("Distance Threshold")
 
 plt.subplot(2, 3, 3)
-plt.imshow(morph_markers, cmap='nipy_spectral')
-plt.title('Morphological Processed Mask')
+plt.imshow(morph_markers, cmap="nipy_spectral")
+plt.title("Morphological Processed Mask")
 
 # Watershed
 dist_markers = cv2.watershed(src_img, dist_markers)
@@ -71,11 +72,11 @@ morph_markers_colored = cv2.addWeighted(gray_img, 0.4, morph_markers_colored, 0.
 
 plt.subplot(2, 3, 5)
 plt.imshow(dist_markers_colored)
-plt.title('Watershed - Distance')
+plt.title("Watershed - Distance")
 
 plt.subplot(2, 3, 6)
 plt.imshow(morph_markers_colored)
-plt.title('Watershed - Morph')
+plt.title("Watershed - Morph")
 
 plt.tight_layout()
 plt.show()

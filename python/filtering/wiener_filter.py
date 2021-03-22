@@ -1,4 +1,5 @@
 import cv2
+import pyheif
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
@@ -6,9 +7,9 @@ import matplotlib.image as mpimg
 BLUR_KERNEL_SIZE = 13
 NOISE_STD = 0.0025
 
-src_img = cv2.imread('./images/river.png')
+src_img = pyheif.read_as_numpy("./images/river.heic")
 height, width= src_img.shape[:2]
-# psf_img = cv2.imread('./images/blur_impulse.png')
+# psf_img = pyheif.read_as_numpy("./images/blur_impulse.heic")
 
 f = cv2.cvtColor(src_img, cv2.COLOR_RGB2GRAY).astype(np.float64) / 255.0
 # h = cv2.cvtColor(psf_img, cv2.COLOR_RGB2GRAY).astype(np.float64) / 255.0
@@ -25,7 +26,7 @@ pad_h = width // 2 - BLUR_KERNEL_SIZE // 2
 h = cv2.copyMakeBorder(h, pad_v - 1, pad_v, pad_h - 1, pad_h, cv2.BORDER_CONSTANT)
 h = np.fft.fftshift(h)
 
-# cv2.imshow('wahla', h / np.max(h))
+# cv2.imshow("wahla", h / np.max(h))
 # cv2.waitKey()
 
 # additive gaussian white noise
@@ -55,22 +56,22 @@ g = np.real(g)
 f_r = np.fft.ifft2(F_r)
 f_r = np.real(f_r)
 
-plt.figure('Wiener Filter', figsize=(12, 5))
+plt.figure("Wiener Filter", figsize=(12, 5))
 
 plt.subplot(1, 3, 1)
-plt.title('Original Image')
-plt.imshow(f, cmap='gray', vmin=0, vmax=1)
-plt.axis('off')
+plt.title("Original Image")
+plt.imshow(f, cmap="gray", vmin=0, vmax=1)
+plt.axis("off")
 
 plt.subplot(1, 3, 2)
-plt.title('Deteriorated Image')
-plt.imshow(g, cmap='gray', vmin=0, vmax=1)
-plt.axis('off')
+plt.title("Deteriorated Image")
+plt.imshow(g, cmap="gray", vmin=0, vmax=1)
+plt.axis("off")
 
 plt.subplot(1, 3, 3)
-plt.title('Restored Image')
-plt.imshow(f_r, cmap='gray', vmin=0, vmax=1)
-plt.axis('off')
+plt.title("Restored Image")
+plt.imshow(f_r, cmap="gray", vmin=0, vmax=1)
+plt.axis("off")
 
 plt.tight_layout()
 plt.show()

@@ -26,5 +26,5 @@ if __name__ == "__main__":
         ret, saliency_map = saliency.computeSaliency(frame_gray)
         saliency_map = np.uint8(saliency_map * 255.0)
 
-        cv2.imshow('Frame', frame)
-        cv2.imshow('Saliency', saliency_map)
+        cv2.imshow("Frame", frame)
+        cv2.imshow("Saliency", saliency_map)

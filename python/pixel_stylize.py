@@ -1,4 +1,5 @@
 import cv2
+import pyheif
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -6,7 +7,7 @@ PIXEL_SIZE = 4
 PIXEL_MARGIN = 2
 
 if __name__ == "__main__":
-    img_src = cv2.imread('./images/testcard.png')
+    img_src = pyheif.read_as_numpy("./images/testcard.heic")
     img_src = cv2.cvtColor(img_src, cv2.COLOR_BGR2RGB)
 
     h, w = img_src.shape[:2]
@@ -33,11 +34,11 @@ if __name__ == "__main__":
     img_stylized += cv2.add(img_stylized, layer_glow, mask=~mask)
 
     fig, (ax_src, ax_stylized) = plt.subplots(
-        1, 2, num='Pixel Stylized', figsize=(12, 6))
+        1, 2, num="Pixel Stylized", figsize=(12, 6))
     ax_src.imshow(img_src)
-    ax_src.set_title('Original')
+    ax_src.set_title("Original")
 
     ax_stylized.imshow(img_stylized)
-    ax_stylized.set_title('Stylized')
+    ax_stylized.set_title("Stylized")
 
     plt.show()

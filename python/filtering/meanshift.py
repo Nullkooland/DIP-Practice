@@ -1,11 +1,11 @@
 import cv2
+import pyheif
 import numpy as np
 import matplotlib.pyplot as plt
 
-src_img = cv2.imread('./images/dont_you_ever_stop.png')
+src_img = pyheif.read_as_numpy("./images/dont_you_ever_stop.heic")
 src_img = cv2.resize(src_img, None, fx=0.5, fy=0.5,
                      interpolation=cv2.INTER_AREA)
-src_img = cv2.cvtColor(src_img, cv2.COLOR_BGR2RGB)
 h, w = src_img.shape[:2]
 
 mean_shift_img = cv2.pyrMeanShiftFiltering(src_img, 15, 40, maxLevel=3)
@@ -23,18 +23,18 @@ minLoG = cv2.morphologyEx(LoG, cv2.MORPH_ERODE, np.ones((3, 3)))
 maxLoG = cv2.morphologyEx(LoG, cv2.MORPH_DILATE, np.ones((3, 3)))
 edge = np.logical_and(maxLoG > 40, LoG < -40)
 
-plt.figure('Flood Fill', figsize=(15, 5))
+plt.figure("Flood Fill", figsize=(15, 5))
 plt.subplot(1, 3, 1)
 plt.imshow(src_img)
-plt.title('Original')
+plt.title("Original")
 
 plt.subplot(1, 3, 2)
 plt.imshow(mean_shift_img)
-plt.title('Mean Shift')
+plt.title("Mean Shift")
 
 plt.subplot(1, 3, 3)
-plt.imshow(edge, cmap='gray')
-plt.title('Edge')
+plt.imshow(edge, cmap="gray")
+plt.title("Edge")
 
 plt.tight_layout()
 plt.show()

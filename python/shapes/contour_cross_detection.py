@@ -1,4 +1,5 @@
 import cv2
+import pyheif
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -11,8 +12,7 @@ CENTER_REL_STD_THRESHOLD = 0.011
 
 
 if __name__ == "__main__":
-    img_src = cv2.imread('./images/cross_test_2.png')
-    img_src = cv2.cvtColor(img_src, cv2.COLOR_BGR2RGB)
+    img_src = pyheif.read_as_numpy("./images/cross_test_2.heic")
     img_anno = img_src.copy()
 
     img_gray = cv2.cvtColor(img_src, cv2.COLOR_RGB2GRAY)
@@ -73,7 +73,7 @@ if __name__ == "__main__":
         if solidity > SOLIDITY_THRESHOLD:
             continue
 
-        # print(f'Solidity: {solidity:.2f}')
+        # print(f"Solidity: {solidity:.2f}")
         contours.append(contour)
 
         if defects.shape[0] < 4:
@@ -88,7 +88,7 @@ if __name__ == "__main__":
             if rel_dist < DEFECT_FARPOINT_REL_DIST_THRESHOLD:
                 continue
 
-            # print(f'Relative distance: {rel_dist:.2f}')
+            # print(f"Relative distance: {rel_dist:.2f}")
 
             start = tuple(contour[s][0])
             end = tuple(contour[e][0])
@@ -114,10 +114,14 @@ if __name__ == "__main__":
     cv2.drawContours(img_anno, cross_contours, -1, (255, 0, 255), -1)
 
     fig, (ax_src, ax_edges, ax_anno) = plt.subplots(
-        1, 3, num='Find Cross', figsize=(12, 4))
+        1, 3, num="Find Cross", figsize=(12, 4))
 
     ax_src.imshow(img_denoised)
     ax_edges.imshow(edges)
     ax_anno.imshow(img_anno)
+
+    ax_src.set_title("Denoised")
+    ax_edges.set_title("Mask")
+    ax_anno.set_title("Anno")
 
     plt.show()

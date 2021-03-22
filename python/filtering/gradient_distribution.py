@@ -3,7 +3,7 @@ import cv2
 import pyheif
 import matplotlib.pyplot as plt
 
-plt.style.use('science')
+plt.style.use("science")
 
 STD_NOISE = 0.25
 NUM_IMG = 3
@@ -11,7 +11,7 @@ NUM_HIST_BIN = 2048
 RANGE_HIST = (-5, 5)
 
 if __name__ == "__main__":
-    img_src = pyheif.read_as_numpy('./images/city.heic')
+    img_src = pyheif.read_as_numpy("./images/city.heic")
     img_src = cv2.cvtColor(img_src, cv2.COLOR_RGB2GRAY)
     img_src = np.float32(img_src) / 255.0
     M, N = img_src.shape
@@ -31,11 +31,11 @@ if __name__ == "__main__":
         gradient_hists[i] = np.histogram(g_norm, NUM_HIST_BIN, RANGE_HIST)[0]
         
     r = np.linspace(RANGE_HIST[0], RANGE_HIST[1], NUM_HIST_BIN)
-    plt.figure('Gradient distribution', figsize=(12, 4))
+    plt.figure("Gradient distribution", figsize=(12, 4))
     for i in range(NUM_IMG):
         log_gradient_hist = np.log10(gradient_hists[i] + 1)
         plt.plot(r, log_gradient_hist)
 
-    plt.legend(['Original', 'Blurred', 'Noised'])
+    plt.legend(["Original", "Blurred", "Noised"])
 
     plt.show()

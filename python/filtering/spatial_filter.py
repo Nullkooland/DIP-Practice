@@ -4,7 +4,7 @@ import pyheif
 import matplotlib.pyplot as plt
 
 if __name__ == "__main__":
-    img_src = pyheif.read_as_numpy('./images/lena.heic')
+    img_src = pyheif.read_as_numpy("images/lena.heic")
     img_src = np.float32(img_src) / 255.0
 
     kernel = np.array([

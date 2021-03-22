@@ -1,8 +1,9 @@
 import cv2
+import pyheif
 import numpy as np
 
-MODEL_DIR = './dnn_models/retinaface/'
-MODEL_PROFILE = 'mnet025_v2'
+MODEL_DIR = "./dnn_models/retinaface/"
+MODEL_PROFILE = "mnet025_v2"
 SCRORE_THRESHOLD = 0.95
 NMS_THRESHOLD = 0.6
 MAX_NUM_DETECTIONS = 256
@@ -14,7 +15,7 @@ def generate_anchors(strides, image_size):
     pass
 
 if __name__ == "__main__":
-    model = cv2.dnn.readNetFromONNX(MODEL_DIR + MODEL_PROFILE + '.onnx')
+    model = cv2.dnn.readNetFromONNX(MODEL_DIR + MODEL_PROFILE + ".onnx")
     output_layers = model.getUnconnectedOutLayersNames()
 
     # Prepare camera
@@ -77,11 +78,11 @@ if __name__ == "__main__":
             num_detection += 1
 
         # Draw FPS
-        cv2.putText(frame, f'FPS: {1.0/infer_time:.2f}', (32, 32),
+        cv2.putText(frame, f"FPS: {1.0/infer_time:.2f}", (32, 32),
                     cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0, 255, 0), 2, lineType=cv2.LINE_AA)
 
         if num_detection == 0:
-            cv2.imshow('RetinaFace', frame)
+            cv2.imshow("RetinaFace", frame)
             continue
 
         indices = cv2.dnn.NMSBoxes(detected_boxes, detected_scores[:num_detection],
@@ -100,9 +101,9 @@ if __name__ == "__main__":
             cv2.rectangle(frame, (x0, y0), (x1, y1),
                           (0, 0, 255), 2, lineType=cv2.LINE_4)
 
-            cv2.putText(frame, f'Face: {score * 100:.1f}%', (x0, y0 - 8),
+            cv2.putText(frame, f"Face: {score * 100:.1f}%", (x0, y0 - 8),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1, lineType=cv2.LINE_AA)
 
-        cv2.imshow('RetinaFace', frame)
+        cv2.imshow("RetinaFace", frame)
 
     cv2.destroyAllWindows()

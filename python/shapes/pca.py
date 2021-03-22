@@ -1,8 +1,9 @@
 import cv2
+import pyheif
 import numpy as np
 
-src_img = cv2.imread('./images/rice.png', cv2.IMREAD_GRAYSCALE)
-cv2.imshow('rice', src_img)
+src_img = pyheif.read_as_numpy("./images/rice.heic")
+cv2.imshow("rice", src_img)
 
 # binary threshold to get mask
 ret, mask = cv2.threshold(src_img, 25, 255, cv2.THRESH_BINARY)
@@ -12,7 +13,7 @@ ret, mask = cv2.threshold(src_img, 25, 255, cv2.THRESH_BINARY)
 kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5))
 mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel)
 
-cv2.imshow('mask', mask)
+cv2.imshow("mask", mask)
 
 # get contours
 contours, hierarchy = cv2.findContours(
@@ -45,6 +46,6 @@ for contour in contours:
                     (200, 75, 0), 2, tipLength=0.5, line_type=cv2.LINE_AA)
 
 
-cv2.imshow('rice contours', img)
+cv2.imshow("rice contours", img)
 
 cv2.waitKey()

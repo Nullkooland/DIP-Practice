@@ -1,13 +1,13 @@
 import cv2
+import pyheif
 import numpy as np
 import matplotlib.pyplot as plt
 
 # flood fill
 LOW_DIFF = 75
 HIGH_DIFF = 75
-src_img = cv2.imread('./images/moonbear.png')
+src_img = pyheif.read_as_numpy("./images/moonbear.heic")
 src_img = cv2.resize(src_img, None, fx=0.5, fy=0.5, interpolation=cv2.INTER_AREA)
-src_img = cv2.cvtColor(src_img, cv2.COLOR_BGR2RGB)
 h, w = src_img.shape[:2]
 
 mask = np.zeros((h + 2, w + 2), dtype=np.uint8)
@@ -21,18 +21,18 @@ ret, img, mask, rect = cv2.floodFill(src_img, mask,
 mask = mask[1:h+1, 1:w+1]
 cropped_img = cv2.copyTo(src_img, mask)
 
-plt.figure('Flood Fill', figsize=(15, 5))
+plt.figure("Flood Fill", figsize=(15, 5))
 plt.subplot(1, 3, 1)
 plt.imshow(src_img)
-plt.title('Original')
+plt.title("Original")
 
 plt.subplot(1, 3, 2)
-plt.imshow(mask, cmap='gray')
-plt.title('Mask')
+plt.imshow(mask, cmap="gray")
+plt.title("Mask")
 
 plt.subplot(1, 3, 3)
 plt.imshow(cropped_img)
-plt.title('Cropped')
+plt.title("Cropped")
 
 plt.tight_layout()
 plt.show()
@@ -67,18 +67,18 @@ def on_mouse(event, x, y, flags, param):
         mask = np.uint8(markers == 1)
         cropped_img = cv2.copyTo(src_img, mask)
 
-        plt.figure('Watershed', figsize=(15, 5))
+        plt.figure("Watershed", figsize=(15, 5))
         plt.subplot(1, 3, 1)
         plt.imshow(cv2.cvtColor(draw_img, cv2.COLOR_BGR2RGB))
-        plt.title('Input Markers')
+        plt.title("Input Markers")
 
         plt.subplot(1, 3, 2)
         plt.imshow(markers)
-        plt.title('Semantic Map')
+        plt.title("Semantic Map")
 
         plt.subplot(1, 3, 3)
         plt.imshow(cropped_img)
-        plt.title('That\'s My Bear!')
+        plt.title("That\'s My Bear!")
 
         plt.tight_layout()
         plt.show()
@@ -91,6 +91,6 @@ cv2.namedWindow("Watershed")
 cv2.setMouseCallback("Watershed", on_mouse, param=(src_img, draw_img, markers))
 
 while True:
-    cv2.imshow('Watershed', draw_img)
+    cv2.imshow("Watershed", draw_img)
     if cv2.waitKey(16) & 0xFF == ord('q'):
         break

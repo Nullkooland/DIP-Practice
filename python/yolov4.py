@@ -4,7 +4,7 @@ import io
 from matplotlib import colors
 from matplotlib import cm
 
-MODEL_DIR = './dnn_models/yolo/'
+MODEL_DIR = "./dnn_models/yolo/"
 CONFIDENCE_THRESHOLD = 0.5
 NMS_THRESHOLD = 0.6
 MAX_NUM_DETECTIONS = 64
@@ -13,16 +13,16 @@ NUM_COLORS = 16
 if __name__ == "__main__":
     # Load YOLOv4 model
     model = cv2.dnn_DetectionModel(
-        MODEL_DIR + 'yolov4.cfg', MODEL_DIR + 'yolov4.weights')
+        MODEL_DIR + "yolov4.cfg", MODEL_DIR + "yolov4.weights")
     
     # # Load YOLOv4 tiny model
     # model = cv2.dnn_DetectionModel(
-    #     MODEL_DIR + 'yolov4_tiny.cfg', MODEL_DIR + 'yolov4_tiny.weights')
+    #     MODEL_DIR + "yolov4_tiny.cfg", MODEL_DIR + "yolov4_tiny.weights")
 
     output_layers = model.getUnconnectedOutLayersNames()
 
     # Load class names
-    with io.open('./dnn_models/yolo/coco.names', 'r') as f:
+    with io.open("./dnn_models/yolo/coco.names", "r") as f:
         names = f.read().splitlines()
 
     # Prepare camera
@@ -37,7 +37,7 @@ if __name__ == "__main__":
     class_ids = np.empty(MAX_NUM_DETECTIONS, dtype=np.int)
 
     # Prepare colors for different class
-    cmap = cm.get_cmap('tab10')
+    cmap = cm.get_cmap("tab10")
     colors = cmap(range(NUM_COLORS), bytes=True)
 
     # Start capturing
@@ -85,11 +85,11 @@ if __name__ == "__main__":
                 num_detection += 1
 
         # Draw FPS
-        cv2.putText(frame, f'FPS: {1.0/infer_time:.2f}', (32, 32),
+        cv2.putText(frame, f"FPS: {1.0/infer_time:.2f}", (32, 32),
                     cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0, 255, 0), 2, lineType=cv2.LINE_AA)
 
         if num_detection == 0:
-            cv2.imshow('YOLO v4', frame)
+            cv2.imshow("YOLO v4", frame)
             continue
 
         # Do Non-maximum Suppression
@@ -117,9 +117,9 @@ if __name__ == "__main__":
             cv2.rectangle(frame, (x, y), (x + width, y + height),
                           (b, g, r), 2, lineType=cv2.LINE_4)
 
-            cv2.putText(frame, f'{name}: {confidence * 100:.1f}%', (x, y - 8),
+            cv2.putText(frame, f"{name}: {confidence * 100:.1f}%", (x, y - 8),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.5, (b, g, r), 1, lineType=cv2.LINE_AA)
 
-        cv2.imshow('YOLO v4', frame)
+        cv2.imshow("YOLO v4", frame)
 
     cv2.destroyAllWindows()

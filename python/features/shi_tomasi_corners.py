@@ -1,10 +1,11 @@
 import cv2
+import pyheif
 import numpy as np
 import matplotlib.pyplot as plt
 
 if __name__ == "__main__":
     # load image
-    img_src = cv2.imread('./images/chessboard_calib.png', cv2.IMREAD_UNCHANGED)
+    img_src = pyheif.read_as_numpy("./images/chessboard_calib.heic")
     alpha = img_src[..., 3]
     img_src = np.copy(img_src[..., :3])
     img_src[alpha == 0] = (0, 200, 0)
@@ -29,15 +30,15 @@ if __name__ == "__main__":
         cv2.circle(img_2x, pos, 4, (255, 0, 255), -1, cv2.LINE_AA)
 
     fig, (ax_denoised, ax_corners, ax_corners_refined) = plt.subplots(
-        1, 3, num='Shi-Tomasi Corners', figsize=(12, 4))
+        1, 3, num="Shi-Tomasi Corners", figsize=(12, 4))
 
     ax_denoised.imshow(img_gray)
-    ax_denoised.set_title('Source')
+    ax_denoised.set_title("Source")
 
     ax_corners.imshow(img_src)
-    ax_corners.set_title('Corners')
+    ax_corners.set_title("Corners")
 
     ax_corners_refined.imshow(img_2x)
-    ax_corners_refined.set_title('Refined Corners')
+    ax_corners_refined.set_title("Refined Corners")
 
     plt.show()

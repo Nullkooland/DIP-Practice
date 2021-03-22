@@ -1,4 +1,5 @@
 import cv2
+import pyheif
 import numpy as np
 
 
@@ -136,7 +137,7 @@ def swf_median(img, k):
     return result
 
 
-src_img = cv2.imread('./images/opossum.png')
+src_img = pyheif.read_as_numpy("./images/opossum.heic")
 src_img = np.float32(src_img / 255.0)
 
 gaussian_kernel = cv2.getGaussianKernel(7, 1.5, ktype=cv2.CV_32F)
@@ -166,23 +167,23 @@ for _ in range(1):
 
 # filtered_median_swf = swf_median(filtered_median_swf, 7)
 
-cv2.imshow('Original', src_img)
-cv2.imshow('Noised', noised)
+cv2.imshow("Original", src_img)
+cv2.imshow("Noised", noised)
 
-# cv2.imshow('Box', filtered_box)
-# cv2.imshow('Gaussian', filtered_gaussian)
-# cv2.imshow('Median', filtered_median)
-# cv2.imshow('Bilateral', filtered_bilateral)
-cv2.imshow('SWF - Box', filtered_box_swf)
-cv2.imshow('SWF - Gaussian', filtered_gaussian_swf)
-# cv2.imshow('SWF - Median', filtered_median_swf)
+# cv2.imshow("Box", filtered_box)
+# cv2.imshow("Gaussian", filtered_gaussian)
+# cv2.imshow("Median", filtered_median)
+# cv2.imshow("Bilateral", filtered_bilateral)
+cv2.imshow("SWF - Box", filtered_box_swf)
+cv2.imshow("SWF - Gaussian", filtered_gaussian_swf)
+# cv2.imshow("SWF - Median", filtered_median_swf)
 cv2.waitKey()
 
-# cv2.imwrite('./output/noised_1.png', np.uint8(noised * 255.0))
-# cv2.imwrite('./output/filtered_box_1.png', np.uint8(filtered_box * 255.0))
-# cv2.imwrite('./output/filtered_gaussian_1.png', np.uint8(filtered_gaussian * 255.0))
-# cv2.imwrite('./output/filtered_median_1.png', filtered_median)
-# cv2.imwrite('./output/filtered_bilateral_1.png', np.uint8(filtered_bilateral * 255.0))
-# cv2.imwrite('./output/filtered_box_swf_1.png', np.uint8(filtered_box_swf * 255.0))
-# cv2.imwrite('./output/filtered_gaussian_swf_1.png', np.uint8(filtered_gaussian_swf * 255.0))
-# cv2.imwrite('./output/filtered_median_swf.png', filtered_median_swf)
+# cv2.imwrite("./output/noised_1.png", np.uint8(noised * 255.0))
+# cv2.imwrite("./output/filtered_box_1.png", np.uint8(filtered_box * 255.0))
+# cv2.imwrite("./output/filtered_gaussian_1.png", np.uint8(filtered_gaussian * 255.0))
+# cv2.imwrite("./output/filtered_median_1.png", filtered_median)
+# cv2.imwrite("./output/filtered_bilateral_1.png", np.uint8(filtered_bilateral * 255.0))
+# cv2.imwrite("./output/filtered_box_swf_1.png", np.uint8(filtered_box_swf * 255.0))
+# cv2.imwrite("./output/filtered_gaussian_swf_1.png", np.uint8(filtered_gaussian_swf * 255.0))
+# cv2.imwrite("./output/filtered_median_swf.png", filtered_median_swf)

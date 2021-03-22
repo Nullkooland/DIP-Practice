@@ -1,15 +1,15 @@
 import cv2
+import pyheif
 import numpy as np
 import matplotlib.pyplot as plt
 
 if __name__ == "__main__":
-    img_src = cv2.imread('./images/quiet_street.png')
-    img_src = cv2.cvtColor(img_src, cv2.COLOR_BGR2RGB)
+    img_src = pyheif.read_as_numpy("./images/loquat_painting.heic")
     img_gray = cv2.cvtColor(img_src, cv2.COLOR_RGB2GRAY)
 
-    corners_response = cv2.cornerHarris(img_gray, 4, 3, 0.05)
+    corners_response = cv2.cornerHarris(img_gray, 4, 3, 0.06)
 
-    thresh = np.max(corners_response) * 0.01
+    thresh = np.max(corners_response) * 0.02
     thresh, corners_locs = cv2.threshold(
         corners_response, thresh, 255, cv2.THRESH_BINARY)
 
@@ -28,6 +28,6 @@ if __name__ == "__main__":
         cv2.drawMarker(img_src, pos, (0, 0, 255),
                        cv2.MARKER_TILTED_CROSS, 9, 1, cv2.LINE_AA)
 
-    plt.figure('Harris Corners', figsize=(12, 6))
+    plt.figure("Harris Corners", figsize=(8, 8))
     plt.imshow(img_src)
     plt.show()

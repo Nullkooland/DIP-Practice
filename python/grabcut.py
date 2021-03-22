@@ -1,8 +1,9 @@
 import cv2
+import pyheif
 import numpy as np
 import matplotlib.pyplot as plt
 
-src_img = cv2.imread('./images/dog.png')
+src_img = pyheif.read_as_numpy("./images/dog.heic")
 src_img = cv2.resize(src_img, None, fx=0.5, fy=0.5,
                      interpolation=cv2.INTER_AREA)
 # src_img = cv2.cvtColor(src_img, cv2.COLOR_BGR2RGB)
@@ -56,21 +57,21 @@ def on_mouse(event, x, y, flags, param):
             mask == cv2.GC_PR_FGD, mask == cv2.GC_FGD).astype(np.uint8)
 
         cropped_img = cv2.copyTo(src_img, foreground_mask)
-        cv2.imshow('cropped', cropped_img)
+        cv2.imshow("cropped", cropped_img)
         # cropped_img = cv2.cvtColor(cropped_img, cv2.COLOR_BGR2RGB)
 
-        # plt.figure('Grabcut', figsize=(12, 4))
+        # plt.figure("Grabcut", figsize=(12, 4))
         # plt.subplot(1, 2, 1)
-        # plt.imshow(mask, cmap='gray')
-        # plt.title('Original')
+        # plt.imshow(mask, cmap="gray")
+        # plt.title("Original")
 
         # plt.subplot(1, 2, 2)
         # plt.imshow(cropped_img)
-        # plt.title('Foreground')
+        # plt.title("Foreground")
 
         # plt.subplot(1, 3, 3)
-        # plt.imshow(fgd, cmap='gray')
-        # plt.title('Morphological Processed Mask')
+        # plt.imshow(fgd, cmap="gray")
+        # plt.title("Morphological Processed Mask")
 
         # plt.tight_layout()
         # plt.show()
@@ -81,8 +82,8 @@ mask = np.zeros((h, w), dtype=np.uint8)
 bgd = np.zeros((1, 65), dtype=np.float64)
 fgd = np.zeros((1, 65), dtype=np.float64)
 
-cv2.namedWindow('Marker', cv2.WINDOW_KEEPRATIO)
-cv2.setMouseCallback('Marker', on_mouse, (src_img, anno_img, mask, bgd, fgd))
+cv2.namedWindow("Marker", cv2.WINDOW_KEEPRATIO)
+cv2.setMouseCallback("Marker", on_mouse, (src_img, anno_img, mask, bgd, fgd))
 
 while True:
     if mode == 5:
@@ -90,8 +91,8 @@ while True:
         cv2.rectangle(anno_img, rect_p0, rect_p1,
                       (255, 0, 0), 2, lineType=cv2.LINE_4)
 
-    cv2.imshow('Marker', anno_img)
-    cv2.imshow('Mask', np.uint8(mask * 75))
+    cv2.imshow("Marker", anno_img)
+    cv2.imshow("Mask", np.uint8(mask * 75))
 
     key = cv2.waitKey(1)
     
@@ -99,6 +100,6 @@ while True:
         break
     if key != -1:
         mode = key - ord('0')
-        print(f'Mode is {mode} now')
+        print(f"Mode is {mode} now")
 
 cv2.destroyAllWindows()

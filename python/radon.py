@@ -1,4 +1,5 @@
 import cv2
+import pyheif
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.animation import ArtistAnimation
@@ -30,19 +31,19 @@ def radon(img, theta):
 
     return g
 
-def get_backprojection_filter(length, ftype='ram-lak'):
+def get_backprojection_filter(length, ftype="ram-lak"):
     H = np.abs(np.linspace(0, 1, length))
-    if ftype == 'shepp-logan':
+    if ftype == "shepp-logan":
         H *= np.sinc(np.linspace(0, 1 / 2, length))
-    elif ftype == 'hamming':
+    elif ftype == "hamming":
         H *= 0.54 + 0.46 * np.cos(np.linspace(0, np.pi, length))
-    elif ftype == 'cosine':
+    elif ftype == "cosine":
         H *= np.cos(np.linspace(0, np.pi / 2, length))
     return H
 
 
 if __name__ == "__main__":
-    src_img = cv2.imread('./images/phantom.png')
+    src_img = pyheif.read_as_numpy("./images/phantom.heic")
     src_img = cv2.cvtColor(src_img, cv2.COLOR_BGR2GRAY)
     src_img = np.float32(src_img) / 255.0
 
@@ -53,32 +54,32 @@ if __name__ == "__main__":
 
     d = g.shape[1]
     g /= np.max(g)
-    # cv2.imshow('radon', g)
+    # cv2.imshow("radon", g)
 
-    fig1, axs = plt.subplots(1, 2, num='Radon transform', figsize=(8, 4))
+    fig1, axs = plt.subplots(1, 2, num="Radon transform", figsize=(8, 4))
     axs[0].imshow(src_img)
     axs[1].imshow(g, extent=[-d / 2, d / 2, 0, 180],
-                  origin='bottom', aspect='auto')
-    axs[1].set_xlabel(r'$\alpha$')
-    axs[1].set_ylabel(r'$\theta$')
+                  origin="bottom", aspect="auto")
+    axs[1].set_xlabel(r"$\alpha$")
+    axs[1].set_ylabel(r"$\theta$")
 
-    axs[0].set_title('Original')
-    axs[1].set_title('Radon transform')
+    axs[0].set_title("Original")
+    axs[1].set_title("Radon transform")
 
-    fig2, axs = plt.subplots(1, 2, num='Radon reconstruction', figsize=(8, 4))
+    fig2, axs = plt.subplots(1, 2, num="Radon reconstruction", figsize=(8, 4))
 
     rec_img = np.zeros((d, d), dtype=np.float32)
 
     im_0 = axs[0].imshow(src_img, vmin=-0.1, vmax=0.1)
     im_1 = axs[1].imshow(rec_img)
     
-    axs[0].set_title('Smear')
-    axs[1].set_title('Reconstructed')
+    axs[0].set_title("Smear")
+    axs[1].set_title("Reconstructed")
 
     ims = []
 
-    print('Performing reconstruction...')
-    H = get_backprojection_filter(d // 2 + 1, 'shepp-logan')
+    print("Performing reconstruction...")
+    H = get_backprojection_filter(d // 2 + 1, "shepp-logan")
 
     for i, theta_deg in enumerate(theta):
         # filter
@@ -100,5 +101,5 @@ if __name__ == "__main__":
     plt.show()
 
     rec_img = cv2.normalize(rec_img, None, 0, 1, cv2.NORM_MINMAX)
-    cv2.imshow('rec', rec_img)
+    cv2.imshow("rec", rec_img)
     cv2.waitKey()

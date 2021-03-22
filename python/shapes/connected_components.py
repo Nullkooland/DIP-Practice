@@ -1,12 +1,12 @@
 import cv2
+import pyheif
 import numpy as np
 import matplotlib.pyplot as plt
 
 BACKGROUND_COLOR = np.array((170, 170, 170), dtype=np.uint8)
 
 if __name__ == "__main__":
-    img_src = cv2.imread('./images/shapes_on_paper.png')
-    img_src = cv2.cvtColor(img_src, cv2.COLOR_BGR2RGB)
+    img_src = pyheif.read_as_numpy("./images/shapes_on_paper.heic")
 
     # pre-process image to smooth out details
     img_mean_shifted = cv2.pyrMeanShiftFiltering(img_src, 20, 50, maxLevel=1)
@@ -30,7 +30,7 @@ if __name__ == "__main__":
                                         y + height - 1), (200, 0, 0), 2)
         cv2.drawMarker(img_src, mass_center, (0, 200, 255),
                        cv2.MARKER_TILTED_CROSS, 15, 3)
-        cv2.putText(img_src, f'Area: {area:.0f}', (x - 5, y - 5), cv2.FONT_HERSHEY_SIMPLEX, 1, (200, 0, 0), 2)
+        cv2.putText(img_src, f"Area: {area:.0f}", (x - 5, y - 5), cv2.FONT_HERSHEY_SIMPLEX, 1, (200, 0, 0), 2)
 
     # fast circle approximation without using hough transform
     x, y, width, height, area = stats_cc[4]
@@ -50,9 +50,9 @@ if __name__ == "__main__":
     # show results
     fig, (ax_stats, ax_labels) = plt.subplots(1, 2, figsize=(12, 6))
     ax_stats.imshow(img_src)
-    ax_stats.set_title('Stats')
+    ax_stats.set_title("Stats")
 
-    ax_labels.imshow(labels_cc, cmap='nipy_spectral')
-    ax_labels.set_title('Labels')
+    ax_labels.imshow(labels_cc, cmap="nipy_spectral")
+    ax_labels.set_title("Labels")
 
     plt.show()

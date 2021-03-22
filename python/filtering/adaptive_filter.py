@@ -1,10 +1,11 @@
 import cv2
+import pyheif
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import norm
 
 def estimate_noise(roi, fig, hist_ax, fit_ax):
-    cv2.imshow('Flat Region', roi)
+    cv2.imshow("Flat Region", roi)
     hist = cv2.calcHist([roi], [0], None, [256], [0, 256])
 
     hist = cv2.normalize(hist, None, 1, 0, norm_type=cv2.NORM_L1, dtype=cv2.CV_32F)
@@ -29,7 +30,7 @@ def adaptive_denoise_filter(img, std_noise, ksize):
 if __name__ == "__main__":
     # Prepare this crappy 720P camera on my MBP
     cap = cv2.VideoCapture(0)
-    # fig = plt.figure('Noise Estimation', figsize=(12, 4))
+    # fig = plt.figure("Noise Estimation", figsize=(12, 4))
     # x = np.arange(256)
     # hist_ax, fit_ax = plt.plot(x, np.zeros_like(x), x, np.zeros_like(x))
     # plt.axis([0, 256, 0, 0.25])
@@ -40,13 +41,13 @@ if __name__ == "__main__":
     while True:
         ret, frame = cap.read()
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        cv2.imshow('Frame', frame)
+        cv2.imshow("Frame", frame)
 
         roi = frame[0:180, 1000:1180]
         mean, std_noise = norm.fit(roi.data)
 
         denoised_frame = adaptive_denoise_filter(frame, std_noise, 11)
-        cv2.imshow('Denoised', denoised_frame)
+        cv2.imshow("Denoised", denoised_frame)
 
         # estimate_noise(roi, fig, hist_ax, fit_ax)
 

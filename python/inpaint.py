@@ -1,7 +1,8 @@
 import cv2
+import pyheif
 import numpy as np
 
-WIN_NAME = 'Inpaint'
+WIN_NAME = "Inpaint"
 is_mouse_down = False
 
 # mouse callback function
@@ -21,16 +22,16 @@ def on_mouse(event, x, y, flags, param):
 
 if __name__ == "__main__":
 
-    src_img = cv2.imread('./images/autumn.png')
+    src_img = pyheif.read_as_numpy("./images/autumn.heic")
     mask = np.zeros(src_img.shape[:2], dtype=np.uint8)
-    # cv2.imshow('image', src_img)
+    # cv2.imshow("image", src_img)
 
     cv2.namedWindow(WIN_NAME, cv2.WINDOW_KEEPRATIO)
     cv2.setMouseCallback(WIN_NAME, on_mouse, (src_img, mask))
 
     while(True):
         cv2.imshow(WIN_NAME, src_img)
-        # cv2.imshow('Mask', mask)
+        # cv2.imshow("Mask", mask)
         if cv2.waitKey(16) & 0xFF == ord('q'):
             break
 

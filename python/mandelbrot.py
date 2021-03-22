@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import cm
 import cv2
+import pyheif
 
 
 def generateMandelbrotSet(width, height, gen_range, cmap=cm.hot(range(256))):
@@ -44,9 +45,9 @@ if __name__ == "__main__":
     gen_range = (0.34, 0.36, 0.40, 0.42)
 
     img = generateMandelbrotSet(width, height, gen_range, colormap)
-    plt.imshow(img, extent=gen_range, interpolation='lanczos')
+    plt.imshow(img, extent=gen_range, interpolation="lanczos")
     plt.show()
 
     # img = np.uint8(img * 255.0)
     # img = cv2.cvtColor(img, cv2.COLOR_RGBA2BGR)
-    # cv2.imwrite('./output/mandelbrot_set.png', img)
+    # cv2.imwrite("./output/mandelbrot_set.png", img)

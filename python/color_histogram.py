@@ -1,73 +1,91 @@
 import cv2
+import pyheif
 import numpy as np
 import matplotlib.pyplot as plt
 
-src_img = cv2.imread('./images/street.png')
-h, w = src_img.shape[:2]
+if __name__ == "__main__":
+    img_rgb = pyheif.read_as_numpy("./images/hand.heic")
+    mask = img_rgb[..., 3] if img_rgb.shape[2] == 4 else None
+    h, w = img_rgb.shape[:2]
 
-rgb_img = cv2.cvtColor(src_img, cv2.COLOR_BGR2RGB)
+    # RGB
+    hist_red = cv2.calcHist([img_rgb], [0], mask, [256], [0, 256])
+    hist_green = cv2.calcHist([img_rgb], [1], mask, [256], [0, 256])
+    hist_blue = cv2.calcHist([img_rgb], [2], mask, [256], [0, 256])
 
-hist_r = cv2.calcHist([rgb_img], [0], None, [256], [0, 256])
-hist_g = cv2.calcHist([rgb_img], [1], None, [256], [0, 256])
-hist_b = cv2.calcHist([rgb_img], [2], None, [256], [0, 256])
+    hist_red = cv2.normalize(hist_red, 0, 1, norm_type=cv2.NORM_L1)
+    hist_green = cv2.normalize(hist_green, 0, 1, norm_type=cv2.NORM_L1)
+    hist_blue = cv2.normalize(hist_blue, 0, 1, norm_type=cv2.NORM_L1)
 
-hist_r = cv2.normalize(hist_r, 0, 1, norm_type=cv2.NORM_L1)
-hist_g = cv2.normalize(hist_g, 0, 1, norm_type=cv2.NORM_L1)
-hist_b = cv2.normalize(hist_b, 0, 1, norm_type=cv2.NORM_L1)
+    # HSV
+    img_hsv = cv2.cvtColor(img_rgb, cv2.COLOR_RGB2HSV_FULL)
 
-hsv_img = cv2.cvtColor(rgb_img, cv2.COLOR_RGB2HSV_FULL)
+    hist_h = cv2.calcHist([img_hsv], [0], mask, [256], [0, 256])
+    hist_s = cv2.calcHist([img_hsv], [1], mask, [256], [0, 256])
+    hist_v = cv2.calcHist([img_hsv], [2], mask, [256], [0, 256])
 
-hist_h = cv2.calcHist([hsv_img], [0], None, [256], [0, 256])
-hist_s = cv2.calcHist([hsv_img], [1], None, [256], [0, 256])
-hist_v = cv2.calcHist([hsv_img], [2], None, [256], [0, 256])
+    hist_h = cv2.normalize(hist_h, 0, 1, norm_type=cv2.NORM_L1)
+    hist_s = cv2.normalize(hist_s, 0, 1, norm_type=cv2.NORM_L1)
+    hist_v = cv2.normalize(hist_v, 0, 1, norm_type=cv2.NORM_L1)
 
-hist_h = cv2.normalize(hist_h, 0, 1, norm_type=cv2.NORM_L1)
-hist_s = cv2.normalize(hist_s, 0, 1, norm_type=cv2.NORM_L1)
-hist_v = cv2.normalize(hist_v, 0, 1, norm_type=cv2.NORM_L1)
+    # Lab
+    img_lab = cv2.cvtColor(img_rgb, cv2.COLOR_RGB2LAB)
 
-plt.figure('RGB Histogram', figsize=(15, 5))
-plt.subplot(1, 3, 1)
-plt.imshow(rgb_img)
-plt.title('Original')
+    hist_l = cv2.calcHist([img_lab], [0], mask, [256], [0, 256])
+    hist_a = cv2.calcHist([img_lab], [1], mask, [256], [0, 256])
+    hist_b = cv2.calcHist([img_lab], [2], mask, [256], [0, 256])
 
-plt.subplot(1, 3, 2)
-x = np.arange(256)
-plt.plot(x, hist_r, color='r')
-plt.plot(x, hist_g, color='g')
-plt.plot(x, hist_b, color='b')
-plt.legend(['R', 'G', 'B'])
-plt.xlim([0, 256])
-plt.title('RGB Histogram')
+    hist_l = cv2.normalize(hist_l, 0, 1, norm_type=cv2.NORM_L1)
+    hist_a = cv2.normalize(hist_a, 0, 1, norm_type=cv2.NORM_L1)
+    hist_b = cv2.normalize(hist_b, 0, 1, norm_type=cv2.NORM_L1)
 
-plt.subplot(1, 3, 3)
-x = np.arange(256)
-plt.plot(x, hist_h, color='c')
-plt.plot(x, hist_s, color='m')
-plt.plot(x, hist_v, color='y')
-plt.legend(['H', 'S', 'V'])
-plt.xlim([0, 256])
-plt.title('HSV Histogram')
+    # YCrCb
+    img_yuv = cv2.cvtColor(img_rgb, cv2.COLOR_RGB2YCrCb)
 
-plt.tight_layout()
-plt.show()
+    hist_y = cv2.calcHist([img_yuv], [0], mask, [256], [0, 256])
+    hist_cr = cv2.calcHist([img_yuv], [1], mask, [256], [0, 256])
+    hist_cb = cv2.calcHist([img_yuv], [2], mask, [256], [0, 256])
 
-print('Histogram Comparison between R & G')
-r = cv2.compareHist(hist_r, hist_g, cv2.HISTCMP_CORREL)
-print(f'Correlation: {r:.4f}')
-r = cv2.compareHist(hist_r, hist_g, cv2.HISTCMP_INTERSECT)
-print(f'Intersection: {r:.4f}')
-r = cv2.compareHist(hist_r, hist_g, cv2.HISTCMP_CHISQR_ALT)
-print(f'Chi-square: {r:.4f}')
-r = cv2.compareHist(hist_r, hist_g, cv2.HISTCMP_BHATTACHARYYA)
-print(f'Bhattacharyya: {r:.4f}')
+    hist_y = cv2.normalize(hist_y, 0, 1, norm_type=cv2.NORM_L1)
+    hist_cr = cv2.normalize(hist_cr, 0, 1, norm_type=cv2.NORM_L1)
+    hist_cb = cv2.normalize(hist_cb, 0, 1, norm_type=cv2.NORM_L1)
 
-def hist2sig(hist):
-    locs = np.arange(256, dtype=np.float32).reshape(256, 1)
-    return np.concatenate((hist, locs), axis=1)
+    fig0, ax = plt.subplots(num="Image", figsize=(8, 8))
+    ax.imshow(img_rgb)
 
+    fig1, axs = plt.subplots(2, 2, num="Histograms",
+                             sharex=False, sharey=False, figsize=(16, 8))
 
-sig_r = hist2sig(hist_r)
-sig_g = hist2sig(hist_g)
+    x = np.arange(256)
+    axs[0, 0].plot(x, hist_red, color="red", label="R")
+    axs[0, 0].plot(x, hist_green, color="green", label="G")
+    axs[0, 0].plot(x, hist_blue, color="blue", label="B")
+    axs[0, 0].legend()
+    axs[0, 0].set_xlim([0, 256])
+    axs[0, 0].set_title("RGB")
 
-emd, lower_bound, flow = cv2.EMD(sig_r, sig_g, distType=cv2.DIST_L2, lowerBound=0)
-print(emd)
+    x = np.arange(256)
+    axs[0, 1].plot(x, hist_h, color="C0", label="H")
+    axs[0, 1].plot(x, hist_s, color="C1", label="S")
+    axs[0, 1].plot(x, hist_v, color="C2", label="V")
+    axs[0, 1].legend()
+    axs[0, 1].set_xlim([0, 256])
+    axs[0, 1].set_title("HSV")
+
+    x = np.arange(256)
+    axs[1, 0].plot(x, hist_l, color="black", label="L")
+    axs[1, 0].plot(x, hist_a, color="magenta", label="a")
+    axs[1, 0].plot(x, hist_b, color="yellow", label="b")
+    axs[1, 0].legend()
+    axs[1, 0].set_xlim([0, 256])
+    axs[1, 0].set_title("Lab")
+
+    x = np.arange(256)
+    axs[1, 1].plot(x, hist_y, color="black", label="Y")
+    axs[1, 1].plot(x, hist_cr, color="red", label="Cr")
+    axs[1, 1].plot(x, hist_cb, color="blue", label="Cb")
+    axs[1, 1].legend()
+    axs[1, 1].set_xlim([0, 256])
+    axs[1, 1].set_title("YCrCb")
+
+    plt.show()

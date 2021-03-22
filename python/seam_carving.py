@@ -1,4 +1,5 @@
 import cv2
+import pyheif
 import numpy as np
 import matplotlib.pyplot as plt
 import time
@@ -20,8 +21,8 @@ def get_cme(energy):
     # Init first row
     M[0, 1:-1] = energy[0, :]
     # Pad two columns for edge case
-    M[:, 0] = float('Inf')
-    M[:, -1] = float('Inf')
+    M[:, 0] = float("Inf")
+    M[:, -1] = float("Inf")
 
     max_cme = 0
     for i in range(1, h):
@@ -99,7 +100,7 @@ def enlarge(src_img, dw):
     return I
 
 
-src_img = cv2.imread('./images/autumn.png')
+src_img = pyheif.read_as_numpy("./images/autumn.heic")
 src_img = cv2.cvtColor(src_img, cv2.COLOR_BGR2RGB)
 src_img = src_img.astype(np.float32) / 255.0
 
@@ -119,14 +120,14 @@ print(e - b)
 
 # I = enlarge(src_img, 384)
 
-plt.figure('Seam Carving')
+plt.figure("Seam Carving")
 
 plt.subplot(1, 2, 1)
-plt.title('Original')
+plt.title("Original")
 plt.imshow(src_img)
 
 plt.subplot(1, 2, 2)
-plt.title('Result')
+plt.title("Result")
 plt.imshow(I)
 
 plt.show()
