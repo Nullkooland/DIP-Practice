@@ -10,7 +10,7 @@ if __name__ == "__main__":
     img_src_1 = pyheif.read_as_numpy("./images/eaidk310_1.heic")
 
     # Get keypoints and feature descriptors using AKAZE algorithm
-    akaze = cv2.AKAZE_create(threshold=6e-3)
+    akaze = cv2.AKAZE_create(threshold=8e-3)
     keypoints_0, descriptors_0 = akaze.detectAndCompute(img_src_0, None)
     keypoints_1, descriptors_1 = akaze.detectAndCompute(img_src_1, None)
 

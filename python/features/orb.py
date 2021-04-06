@@ -18,7 +18,11 @@ if __name__ == "__main__":
     keypoints_1, descriptors_1 = orb.detectAndCompute(img_src_1, mask_1)
 
     # Match descriptors of two images
-    matcher = cv2.BFMatcher_create(normType=cv2.NORM_HAMMING)
+    FLANN_INDEX_LSH = 6
+    index_params = dict(algorithm=FLANN_INDEX_LSH,
+                        table_number=16, key_size=16)
+    search_params = dict(checks=64)  # or pass empty dictionary
+    matcher = cv2.FlannBasedMatcher(index_params, search_params)
     matches = matcher.knnMatch(
         descriptors_0, descriptors_1, k=2, compactResult=True)
 

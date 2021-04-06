@@ -40,8 +40,8 @@ if __name__ == "__main__":
     FLANN_INDEX_KDTREE = 0
     index_params = dict(algorithm=FLANN_INDEX_KDTREE, trees=5)
     search_params = dict(checks=64)  # or pass empty dictionary
-    flann = cv2.FlannBasedMatcher(index_params, search_params)
-    matches = flann.knnMatch(desc_1, desc_2, k=2, compactResult=True)
+    matcher = cv2.FlannBasedMatcher(index_params, search_params)
+    matches = matcher.knnMatch(desc_1, desc_2, k=2, compactResult=True)
 
     # create mask to exclude vague matches
     mask_matches = np.zeros((len(matches), 2), dtype=np.uint8)
