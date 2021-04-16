@@ -14,11 +14,11 @@ def on_mouse_event(event, x, y, flags, param):
 
 
 def get_tracking_points(cap: cv2.VideoCapture) -> np.ndarray:
-    cv2.namedWindow("ROI crop")
+    cv2.namedWindow("Specify tracking points")
 
     tracking_points = None
     list_tracking_points = []
-    cv2.setMouseCallback("ROI crop", on_mouse_event,
+    cv2.setMouseCallback("Specify tracking points", on_mouse_event,
                          param=list_tracking_points)
 
     while True:
@@ -40,9 +40,9 @@ def get_tracking_points(cap: cv2.VideoCapture) -> np.ndarray:
         for point in list_tracking_points:
             cv2.circle(frame, point, 4, (150, 0, 150), -1)
 
-        cv2.imshow("ROI crop", frame)
+        cv2.imshow("Specify tracking points", frame)
 
-    cv2.destroyWindow("ROI crop")
+    cv2.destroyWindow("Specify tracking points")
     return tracking_points
 
 
