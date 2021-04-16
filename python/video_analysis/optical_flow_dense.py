@@ -23,7 +23,7 @@ if __name__ == "__main__":
 
         mag_flow, angle_flow = cv2.cartToPolar(flow[..., 0], flow[..., 1])
         flow_hsv[..., 0] = cv2.normalize(angle_flow, None, 0, 255, cv2.NORM_MINMAX, dtype=cv2.CV_8U)
-        flow_hsv[..., 2] = cv2.normalize(mag_flow, None, 0, 255, cv2.NORM_MINMAX, dtype=cv2.CV_8U)
+        flow_hsv[..., 2] = np.clip(mag_flow * 5, 0, 255)
         flow_bgr = cv2.cvtColor(flow_hsv, cv2.COLOR_HSV2BGR_FULL)
 
         cv2.imshow("Frame", frame)
