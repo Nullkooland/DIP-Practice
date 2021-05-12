@@ -16,7 +16,7 @@ if __name__ == "__main__":
     net = cv2.dnn.readNet(f"{MODEL_DIR}/{VARIANT}.cfg",
                           f"{MODEL_DIR}/{VARIANT}.weights")
     model = cv2.dnn_DetectionModel(net)
-    model.setInputParams(size=(416, 416), scale=1/255, swapRB=True)
+    model.setInputParams(size=(416, 416), scale=1/255, swapRB=True, crop=False)
 
     # Load class names
     with io.open("./dnn_models/yolo/coco.names", "r") as f:
