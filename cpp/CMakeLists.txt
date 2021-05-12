@@ -9,10 +9,10 @@ add_compile_options(-Wall -mavx -mavx2 -mfma -msse -msse2 -msse3)
 find_package(argparse REQUIRED)
 find_package(OpenCV REQUIRED)
 
-find_package(PkgConfig REQUIRED)
-pkg_search_module(HEIF REQUIRED libheif)
+add_subdirectory(utils)
 
 add_subdirectory(side_window_filtering)
 add_subdirectory(interpolation)
 add_subdirectory(orga_no_care)
 add_subdirectory(gapi_test)
+add_subdirectory(optimization)
