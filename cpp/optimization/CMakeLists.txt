@@ -5,4 +5,8 @@ add_executable(${target_name}
 )
 
 target_include_directories(${target_name} PRIVATE ${OpenCV_INCLUDE_DIRS})
-target_link_libraries(${target_name} PRIVATE ${OpenCV_LIBS})
+
+target_link_libraries(${target_name} PRIVATE 
+    ${OpenCV_LIBS}
+    utils
+)
