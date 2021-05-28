@@ -2,6 +2,7 @@
 
 #include <cmath>
 #include <numbers>
+#include <fmt/format.h>
 #include <opencv2/calib3d.hpp>
 #include <opencv2/core.hpp>
 #include <opencv2/core/optim.hpp>
@@ -89,7 +90,7 @@ int main(int argc, char* argv[]) {
 
     cv::Vec3d w = {1.0, 3.0, 1.0};
     double err = solver->minimize(w);
-    std::printf("Err: %g\n", err);
+    fmt::print("Solved parameters: [{0:.2f}, {1:.2f}, {2:.2f}], Error: {3:.4f}\n", w[0], w[1], w[2], err);
 
     return 0;
 }

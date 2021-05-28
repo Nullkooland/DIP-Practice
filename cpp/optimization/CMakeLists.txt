@@ -8,5 +8,6 @@ target_include_directories(${target_name} PRIVATE ${OpenCV_INCLUDE_DIRS})
 
 target_link_libraries(${target_name} PRIVATE 
     ${OpenCV_LIBS}
+    fmt::fmt
     utils
 )

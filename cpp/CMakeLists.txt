@@ -7,6 +7,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 add_compile_options(-Wall -mavx -mavx2 -mfma -msse -msse2 -msse3)
 
 find_package(argparse REQUIRED)
+find_package(fmt REQUIRED)
 find_package(OpenCV REQUIRED)
 
 add_subdirectory(utils)

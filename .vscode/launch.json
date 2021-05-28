@@ -10,7 +10,9 @@
             "name": "CMake Launch",
             "program": "${command:cmake.launchTargetPath}",
             "args": [],
-            "cwd": "${workspaceFolder}"
+            "cwd": "${workspaceFolder}",
+            "internalConsoleOptions": "neverOpen",
+            "console": "integratedTerminal"
         },
         {
             "name": "Python: Current File",
