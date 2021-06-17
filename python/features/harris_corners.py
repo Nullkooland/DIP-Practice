@@ -15,19 +15,19 @@ if __name__ == "__main__":
 
     corners_locs = np.uint8(corners_locs)
 
-    num_corners, _, _, centroids = cv2.connectedComponentsWithStats(
+    num_corners, _, _, corners = cv2.connectedComponentsWithStats(
         corners_locs)
 
-    # cv2.cornerSubPix()
+    # Refine to achieve sub-pixel precision
     criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 100, 0.001)
-    corners = cv2.cornerSubPix(img_gray, np.float32(
-        centroids), (5, 5), (-1, -1), criteria)
+    corners_refined = cv2.cornerSubPix(img_gray, np.float32(
+        corners), (5, 5), (-1, -1), criteria)
 
-    for i in range(0, num_corners):
-        pos = tuple(np.int32(corners[i]))
-        cv2.drawMarker(img_src, pos, (0, 0, 255),
-                       cv2.MARKER_TILTED_CROSS, 9, 1, cv2.LINE_AA)
+    # Show corners
+    fig, ax = plt.subplots(1, 1, num="Harris corners", figsize=(8, 8))
+    ax.imshow(img_src)
+    for corner, corner_refined in zip(corners, corners_refined):
+        ax.plot(corner[0], corner[1], ls='', marker='.', color="red")
+        ax.plot(corner_refined[0], corner_refined[1], ls='', marker='.', color="magenta")
 
-    plt.figure("Harris Corners", figsize=(8, 8))
-    plt.imshow(img_src)
     plt.show()

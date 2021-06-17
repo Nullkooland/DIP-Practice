@@ -1,8 +1,6 @@
 import cv2
 import pyheif
-import numpy as np
-import matplotlib.pyplot as plt
-import pyheif
+from visualizer import plot_keypoints
 
 if __name__ == "__main__":
     # Read image
@@ -15,17 +13,4 @@ if __name__ == "__main__":
 
     # Detect and visualize blobs
     keypoints = fast.detect(img_gray)
-
-    img_anno = cv2.drawKeypoints(
-        img_src, keypoints, None, (255, 0, 0), cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
-
-    fig, (ax_src, ax_anno) = plt.subplots(
-        1, 2, num="Blobs", sharey=True, figsize=(14, 6))
-
-    ax_src.imshow(img_src)
-    ax_anno.imshow(img_anno)
-
-    ax_src.set_title("Original")
-    ax_anno.set_title("FAST keypoints")
-
-    plt.show()
+    plot_keypoints(img_src, keypoints)

@@ -1,8 +1,9 @@
 import cv2
 import pyheif
 import numpy as np
-import matplotlib.pyplot as plt
-import pyheif
+from typing import List
+from visualizer import plot_keypoints, plot_matches
+
 
 if __name__ == "__main__":
     # Read source image pair
@@ -19,23 +20,12 @@ if __name__ == "__main__":
     matches = matcher.knnMatch(
         descriptors_0, descriptors_1, k=2, compactResult=True)
 
-    # Do ratio test
-    mask_matches = np.zeros((len(matches), 2), dtype=np.uint8)
+    # do ratio test
+    matches_valid: List[cv2.DMatch] = []
+
     for (match_primary, match_secondary) in matches:
         if match_primary.distance < 0.7 * match_secondary.distance:
-            i = match_primary.queryIdx
-            mask_matches[i, 0] = 1
+            matches_valid.append(match_primary)
 
-    # Draw matches
-    img_matches = cv2.drawMatchesKnn(
-        img_src_0, keypoints_0,
-        img_src_1, keypoints_1,
-        matches, None,
-        matchesMask=mask_matches,
-        flags=cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
-
-    # Show matches
-    plt.figure("AKAZE Matches", figsize=(14, 6))
-    plt.imshow(img_matches)
-
-    plt.show()
+    plot_keypoints(img_src_0, keypoints_0)
+    plot_matches(img_src_0, img_src_1, keypoints_0, keypoints_1, matches_valid)
