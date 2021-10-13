@@ -4,7 +4,6 @@ import cv2
 import pyheif
 import matplotlib.pyplot as plt
 
-
 def omp(A, b, max_iters=64, err_tol=1e-5):
     m, n = A.shape
     # Get adjoint operator of A
@@ -15,8 +14,8 @@ def omp(A, b, max_iters=64, err_tol=1e-5):
     # Init residual r to b
     r = b.copy()
     # Init support set to empty set
-    support_set = np.empty(0, dtype=np.int)
-
+    support_set = np.empty(0, dtype=np.int64)
+    
     norm_b = np.linalg.norm(b)
     err = np.finfo(np.float32).max
     i = 0

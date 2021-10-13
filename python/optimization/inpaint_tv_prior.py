@@ -1,5 +1,6 @@
 import numpy as np
 import cv2
+from numpy.core.fromnumeric import shape
 import pyheif
 import matplotlib.pyplot as plt
 import scipy.sparse.linalg as sparse_linalg
@@ -15,14 +16,13 @@ def poke_holes(img, p):
 
 
 if __name__ == "__main__":
-    src_img = pyheif.read_as_numpy("./images/lena256.heic")
-    src_img = cv2.cvtColor(src_img, cv2.COLOR_BGR2RGB)
+    src_img = pyheif.read_as_numpy("./images/lena.heic")
     src_img = np.float32(src_img) / 255.0
     l_tv = 1e-3
 
     m, n, c = src_img.shape
 
-    broken_img, holes = poke_holes(src_img, 0.25)
+    broken_img, holes = poke_holes(src_img, 0.5)
 
     def missing_pixels(img_vec):
         img = np.reshape(img_vec, (m, n, c))
@@ -54,7 +54,9 @@ if __name__ == "__main__":
         return img.flatten()
 
     A = LinearOperator(
-        (m*n*c, m*n*c), matvec=lambda img_vec:
+        dtype=np.float32,
+        shape=(m*n*c, m*n*c),
+        matvec=lambda img_vec:
         missing_pixels(missing_pixels(img_vec)) +
         l_tv * (
             diff_x_adjoint(diff_x(img_vec)) +
