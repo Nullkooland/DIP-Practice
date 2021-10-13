@@ -1,11 +1,11 @@
-import numpy as np
 import cv2
-import pyheif
+import numpy as np
 import matplotlib.pyplot as plt
+from utils.image_reader import ImageReader
 
 if __name__ == "__main__":
-    img_src = pyheif.read_as_numpy("images/lena.heic")
-    img_src = np.float32(img_src) / 255.0
+    reader = ImageReader()
+    img_src = reader.read("images/lena.heic", np.float32)
 
     kernel = np.array([
         [-1, -1, -1],

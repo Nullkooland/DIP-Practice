@@ -1,9 +1,8 @@
 import numpy as np
 import cv2
-import pyheif
 import matplotlib.pyplot as plt
+from utils.image_reader import ImageReader
 
-plt.style.use("science")
 
 STD_NOISE = 0.25
 NUM_IMG = 3
@@ -11,7 +10,10 @@ NUM_HIST_BIN = 2048
 RANGE_HIST = (-5, 5)
 
 if __name__ == "__main__":
-    img_src = pyheif.read_as_numpy("./images/city.heic")
+    plt.style.use("science")
+
+    reader = ImageReader()
+    img_src = reader.read("images/city.heic")
     img_src = cv2.cvtColor(img_src, cv2.COLOR_RGB2GRAY)
     img_src = np.float32(img_src) / 255.0
     M, N = img_src.shape
@@ -29,7 +31,7 @@ if __name__ == "__main__":
         g_y = cv2.Sobel(img, cv2.CV_32F, 0, 1)
         g_norm = cv2.magnitude(g_x, g_y) * np.sign(g_y)
         gradient_hists[i] = np.histogram(g_norm, NUM_HIST_BIN, RANGE_HIST)[0]
-        
+
     r = np.linspace(RANGE_HIST[0], RANGE_HIST[1], NUM_HIST_BIN)
     plt.figure("Gradient distribution", figsize=(12, 4))
     for i in range(NUM_IMG):

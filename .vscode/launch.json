@@ -5,7 +5,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "type": "lldb",
+            "type": "lldb-vscode",
             "request": "launch",
             "name": "CMake Launch",
             "program": "${command:cmake.launchTargetPath}",
@@ -20,6 +20,9 @@
             "request": "launch",
             "program": "${file}",
             "cwd": "${workspaceFolder}",
+            "env": {
+                "PYTHONPATH": "${env:PYTHONPATH}:${workspaceFolder}/python"
+            },
             "console": "internalConsole",
             "internalConsoleOptions": "openOnSessionStart"
         }

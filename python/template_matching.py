@@ -1,13 +1,14 @@
 import cv2
-import pyheif
 import numpy as np
 import matplotlib.pyplot as plt
+from utils.image_reader import ImageReader
 
 # KERNEL_RADIUS = 300
 
 if __name__ == "__main__":
-    src_img = pyheif.read_as_numpy("./images/rmb_coins.heic")
-    template = pyheif.read_as_numpy("./images/one_yuan_coin.heic")
+    reader = ImageReader()
+    src_img = reader.read("images/rmb_coins.heic").copy()
+    template = reader.read("images/one_yuan_coin.heic")
     template = cv2.resize(template, (192, 192))
 
     h, w = src_img.shape[:2]
@@ -17,7 +18,7 @@ if __name__ == "__main__":
     minVal, maxVal, minLoc, maxLoc = cv2.minMaxLoc(matching)
 
     cv2.rectangle(src_img, maxLoc,
-                (maxLoc[0] + tw, maxLoc[1] + th), (255, 0, 0), 2)
+                  (maxLoc[0] + tw, maxLoc[1] + th), (255, 0, 0), 2)
     cv2.rectangle(matching, maxLoc, (maxLoc[0] + tw, maxLoc[1] + th), -1, 2)
 
     plt.figure("Template Matching", figsize=(12, 6))
@@ -30,7 +31,7 @@ if __name__ == "__main__":
     plt.tight_layout()
     plt.show()
 
-    template = pyheif.read_as_numpy("./images/eye_template.heic")
+    template = reader.read("images/eye_template.heic")
     cv2.imshow("Head Template", template)
 
     template = cv2.resize(template, None, fx=0.4, fy=0.4)

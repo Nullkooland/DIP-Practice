@@ -1,17 +1,17 @@
 import cv2
-import pyheif
 import numpy as np
 from typing import List
+from utils.image_reader import ImageReader
 from visualizer import plot_keypoints, plot_matches
-
 
 if __name__ == "__main__":
     # Read source image pair
-    img_src_0 = pyheif.read_as_numpy("./images/eaidk310_0.heic")
-    img_src_1 = pyheif.read_as_numpy("./images/eaidk310_1.heic")
+    reader = ImageReader()
+    img_src_0 = reader.read("images/eaidk310_0.heic")
+    img_src_1 = reader.read("images/eaidk310_0.heic")
 
     # Get keypoints and feature descriptors using AKAZE algorithm
-    akaze = cv2.AKAZE_create(threshold=8e-3)
+    akaze = cv2.AKAZE_create(threshold=9e-3)
     keypoints_0, descriptors_0 = akaze.detectAndCompute(img_src_0, None)
     keypoints_1, descriptors_1 = akaze.detectAndCompute(img_src_1, None)
 

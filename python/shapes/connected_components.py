@@ -1,12 +1,13 @@
 import cv2
-import pyheif
 import numpy as np
 import matplotlib.pyplot as plt
+from utils.image_reader import ImageReader
 
 BACKGROUND_COLOR = np.array((170, 170, 170), dtype=np.uint8)
 
 if __name__ == "__main__":
-    img_src = pyheif.read_as_numpy("./images/shapes_on_paper.heic")
+    reader = ImageReader()
+    img_src = reader.read("images/shapes_on_paper.heic").copy()
 
     # pre-process image to smooth out details
     img_mean_shifted = cv2.pyrMeanShiftFiltering(img_src, 20, 50, maxLevel=1)

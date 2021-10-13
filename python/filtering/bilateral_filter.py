@@ -1,13 +1,15 @@
 import cv2
-import pyheif
+import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 from mpl_toolkits.axes_grid1 import ImageGrid
-import numpy as np
+from utils.image_reader import ImageReader
 
 if __name__ == "__main__":
-    src_img = pyheif.read_as_numpy("./images/hanpe_tiger.heic")
-    src_img = cv2.normalize(src_img, None, 0, 1, cv2.NORM_MINMAX, dtype=cv2.CV_32F)
+    reader = ImageReader()
+    src_img = reader.read("images/hanpe_tiger.heic")
+    src_img = cv2.normalize(src_img, None, 0, 1,
+                            cv2.NORM_MINMAX, dtype=cv2.CV_32F)
 
     plt.figure("Source Image")
     plt.imshow(src_img)

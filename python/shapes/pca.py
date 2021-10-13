@@ -1,10 +1,11 @@
 import cv2
-from matplotlib import pyplot as plt
-import pyheif
 import numpy as np
+from matplotlib import pyplot as plt
+from utils.image_reader import ImageReader
 
 if __name__ == "__main__":
-    src_img = pyheif.read_as_numpy("./images/rice.heic")
+    reader = ImageReader()
+    src_img = reader.read("images/rice.heic")
 
     # binary threshold to get mask
     ret, mask = cv2.threshold(src_img[..., 0], 25, 255, cv2.THRESH_BINARY)

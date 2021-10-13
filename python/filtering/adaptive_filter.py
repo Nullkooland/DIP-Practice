@@ -1,5 +1,4 @@
 import cv2
-import pyheif
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import norm
@@ -29,7 +28,7 @@ def adaptive_denoise_filter(img, std_noise, ksize):
 
 if __name__ == "__main__":
     # Prepare this crappy 720P camera on my MBP
-    cap = cv2.VideoCapture(0)
+    cap = cv2.VideoCapture(1)
     # fig = plt.figure("Noise Estimation", figsize=(12, 4))
     # x = np.arange(256)
     # hist_ax, fit_ax = plt.plot(x, np.zeros_like(x), x, np.zeros_like(x))
@@ -52,7 +51,7 @@ if __name__ == "__main__":
         # estimate_noise(roi, fig, hist_ax, fit_ax)
 
         if cv2.waitKey(16) & 0xFF == ord('q'):
-            break;
+            break
 
     # plt.close(fig)
     cv2.destroyAllWindows()

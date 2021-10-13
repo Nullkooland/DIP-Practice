@@ -1,15 +1,15 @@
-import numpy as np
 import cv2
-import pyheif
+import numpy as np
 import matplotlib.pyplot as plt
+from utils.image_reader import ImageReader
 
 # Number of clusters
 K = 6
 
 if __name__ == "__main__":
-    # Read image and normalize to [0, 1] in fp32
-    img_src = pyheif.read_as_numpy(
-        "images/flower_field.heic").astype(np.float32) / 255.0
+    # Read image in fp32
+    reader = ImageReader()
+    img_src = reader.read("images/flower_field.heic", np.float32)
 
     # Convert to Lab color space and make vectorized copy
     img_lab = cv2.cvtColor(img_src, cv2.COLOR_RGB2LAB)

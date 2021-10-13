@@ -1,10 +1,11 @@
 import cv2
-import pyheif
 import numpy as np
 import matplotlib.pyplot as plt
+from utils.image_reader import ImageReader
 
 if __name__ == "__main__":
-    img_src = pyheif.read_as_numpy("./images/loquat_painting.heic")
+    reader = ImageReader()
+    img_src = reader.read("images/loquat_painting.heic")
     img_gray = cv2.cvtColor(img_src, cv2.COLOR_RGB2GRAY)
 
     corners_response = cv2.cornerHarris(img_gray, 4, 3, 0.06)

@@ -1,10 +1,11 @@
 import cv2
-import pyheif
 import numpy as np
 import matplotlib.pyplot as plt
+from utils.image_reader import ImageReader
 
 if __name__ == "__main__":
-    img_src = pyheif.read_as_numpy("./images/opossum.heic")
+    reader = ImageReader()
+    img_src = reader.read("images/opossum.heic")
 
     # saliency = cv2.saliency.StaticSaliencyFineGrained_create()
     saliency = cv2.saliency.StaticSaliencySpectralResidual_create()

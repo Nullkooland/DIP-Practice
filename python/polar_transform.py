@@ -1,5 +1,5 @@
 import cv2
-import pyheif
+from utils.image_reader import ImageReader
 import numpy as np
 import matplotlib.pyplot as plt
 import math

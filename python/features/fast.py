@@ -1,11 +1,12 @@
 import cv2
-import pyheif
 from visualizer import plot_keypoints
+from utils.image_reader import ImageReader
 
 if __name__ == "__main__":
     # Read image
-    img_src = pyheif.read_as_numpy("./images/boat.heic")
-    img_gray = cv2.cvtColor(img_src, cv2.COLOR_RGB2BGRA)
+    reader = ImageReader()
+    img_src = reader.read("images/boat.heic")
+    img_gray = cv2.cvtColor(img_src, cv2.COLOR_RGB2GRAY)
 
     # Create FAST feature detector
     fast = cv2.FastFeatureDetector_create(

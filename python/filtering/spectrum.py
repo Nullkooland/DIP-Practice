@@ -1,10 +1,11 @@
 import cv2
-import pyheif
 import numpy as np
 import matplotlib.pyplot as plt
+from utils.image_reader import ImageReader
 
 if __name__ == "__main__":
-    img_src = pyheif.read_as_numpy("./images/tiger.heic")
+    reader = ImageReader()
+    img_src = reader.read("images/tiger.heic")
     img_src = cv2.cvtColor(img_src, cv2.COLOR_RGB2GRAY)
     img_src = np.float32(img_src) / 255.0
 

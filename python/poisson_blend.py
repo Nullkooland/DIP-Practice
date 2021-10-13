@@ -1,18 +1,31 @@
-import numpy as np
 import cv2
-import pyheif
+import numpy as np
+import matplotlib.pyplot as plt
+from utils.image_reader import ImageReader
 
-# Load images
-foreground = pyheif.read_as_numpy("./images/polar_bear.heic")
-background = pyheif.read_as_numpy("./images/loquat_painting.heic")
+if __name__ == "__main__":
+    # Load images
+    reader = ImageReader()
+    foreground = reader.read("images/polar_bear.heic")
+    background = reader.read("images/loquat_painting.heic")
 
-# foreground = cv2.resize(foreground, None, fx=0.5, fy=0.5)
-mask = np.full_like(foreground, 255)
+    # foreground = cv2.resize(foreground, None, fx=0.5, fy=0.5)
+    mask = np.full_like(foreground, 255)
 
-(height, width, channels) = background.shape
-pos = (120, 64)
+    (height, width, channels) = background.shape
+    pos = (120, 64)
 
-blend = cv2.seamlessClone(foreground, background, mask, pos, cv2.MIXED_CLONE)
+    blended = cv2.seamlessClone(foreground, background, mask, pos, cv2.MIXED_CLONE)
 
-cv2.imshow("Blend Result", blend)
-cv2.waitKey()
+    fig, axs = plt.subplots(1, 3, num="Possion blend", figsize=(12, 4))
+
+    axs[0].imshow(background)
+    axs[0].set_title("Background")
+
+    axs[1].imshow(foreground)
+    axs[1].set_title("Foreground")
+
+    axs[2].imshow(blended)
+    axs[2].set_title("Blended")
+
+    plt.show()

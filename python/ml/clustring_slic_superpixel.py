@@ -1,10 +1,11 @@
 import cv2
-import pyheif
 import numpy as np
 import matplotlib.pyplot as plt
+from utils.image_reader import ImageReader
 
 if __name__ == "__main__":
-    img_src = pyheif.read_as_numpy("images/dog.heic")
+    reader = ImageReader()
+    img_src = reader.read("images/dog.heic")
     # h, w = img_src.shape[:2]
 
     slic = cv2.ximgproc.createSuperpixelSLIC(

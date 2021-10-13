@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import cm
 import cv2
-import pyheif
+from utils.image_reader import ImageReader
 
 
 def generateMandelbrotSet(width, height, gen_range, cmap=cm.hot(range(256))):

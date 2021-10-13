@@ -1,12 +1,14 @@
 import cv2
-import pyheif
+import numpy as np
 import matplotlib.pyplot as plt
+from utils.image_reader import ImageReader
 
 DIM_FOURIER_DESC = 256
-LEN_HPF = DIM_FOURIER_DESC // 2
+LEN_HPF = DIM_FOURIER_DESC * 3 // 4
 
 if __name__ == "__main__":
-    img_src = pyheif.read_as_numpy("images/hand.heic")
+    reader = ImageReader()
+    img_src = reader.read("images/hand.heic", ignore_alpha=False)
     mask = img_src[..., 3]
 
     contours, _ = cv2.findContours(
@@ -35,6 +37,7 @@ if __name__ == "__main__":
         axs[1].plot(contour_rec[..., 0], contour_rec[..., 1],
                     alpha=0.75, label="Approximate")
         axs[1].axis("equal")
+        axs[1].invert_yaxis()
         axs[1].set_title("Contour")
         axs[1].legend(loc="upper right")
 

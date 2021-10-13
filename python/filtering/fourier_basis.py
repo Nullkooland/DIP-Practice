@@ -2,6 +2,16 @@ import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.axes_grid1 import ImageGrid
 
+SIZE = (512, 512)
+UV = [
+    (1, 0),
+    (0, 1),
+    (1, 1),
+    (3, 1),
+    (-3, 1),
+    (4, 8)
+]
+
 
 def get_fourier_basis(size, u, v):
     # get 2D grid
@@ -15,24 +25,15 @@ def get_fourier_basis(size, u, v):
     return np.exp(1j * 2 * np.pi * (freq_x * xx + freq_y * yy))
 
 
-size = (512, 512)
-uv = [
-    (1, 0),
-    (0, 1),
-    (1, 1),
-    (3, 1),
-    (-3, 1),
-    (4, 8)
-]
+if __name__ == "__main__":
+    plt.figure("2D Fourier Basis")
 
-plt.figure("2D Fourier Basis")
+    for i, (u, v) in enumerate(UV):
+        plt.subplot(2, 3, i + 1)
+        basis = get_fourier_basis(SIZE, u, v)
+        plt.imshow(np.real(basis), cmap="gray")
+        plt.xticks([])
+        plt.yticks([])
+        plt.title(f"u = {u}, v = {v}"")
 
-for i, (u, v) in enumerate(uv):
-    plt.subplot(2, 3, i + 1)
-    basis = get_fourier_basis(size, u, v)
-    plt.imshow(np.real(basis), cmap="gray")
-    plt.xticks([])
-    plt.yticks([])
-    plt.title(f'u = {u}, v = {v}')
-
-plt.show()
+    plt.show()

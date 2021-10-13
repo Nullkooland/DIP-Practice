@@ -1,11 +1,12 @@
 import cv2
-import pyheif
 import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.axes_grid1 import make_axes_locatable
+from utils.image_reader import ImageReader
 
 if __name__ == "__main__":
-    img_src = pyheif.read_as_numpy("images/hand.heic")
+    reader = ImageReader()
+    img_src = reader.read("images/hand.heic", ignore_alpha=False)
     mask = img_src[..., 3]
     skeleton = cv2.ximgproc.thinning(
         mask, thinningType=cv2.ximgproc.THINNING_ZHANGSUEN)

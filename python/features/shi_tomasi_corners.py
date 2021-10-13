@@ -1,11 +1,12 @@
 import cv2
-import pyheif
 import numpy as np
+from utils.image_reader import ImageReader
 import matplotlib.pyplot as plt
 
 if __name__ == "__main__":
     # load image
-    img_src = pyheif.read_as_numpy("./images/chessboard_calib.heic")
+    reader = ImageReader()
+    img_src = reader.read("images/chessboard_calib.heic", ignore_alpha=False)
     alpha = img_src[..., 3]
     img_src = np.copy(img_src[..., :3])
     img_src[alpha == 0] = (0, 200, 0)

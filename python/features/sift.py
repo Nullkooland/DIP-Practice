@@ -1,18 +1,18 @@
 from typing import List
 import cv2
-import pyheif
 import numpy as np
+from utils.image_reader import ImageReader
 from visualizer import plot_keypoints, plot_matches
+
 NUM_FEATURES = 1024
 
 if __name__ == "__main__":
     # read two images of the same scene
-    img_src_0 = pyheif.read_as_numpy("./images/sleepy_cat_scale_1.heic")
-    img_src_1 = pyheif.read_as_numpy("./images/sleepy_cat_scale_2.heic")
-    mask_0 = pyheif.read_as_numpy(
-        "./images/sleepy_cat_mask_scale_1.heic")
-    mask_1 = pyheif.read_as_numpy(
-        "./images/sleepy_cat_mask_scale_2.heic")
+    reader = ImageReader()
+    img_src_0 = reader.read("images/sleepy_cat_scale_1.heic")
+    img_src_1 = reader.read("images/sleepy_cat_scale_2.heic")
+    mask_0 = reader.read("images/sleepy_cat_mask_scale_1.heic")
+    mask_1 = reader.read("images/sleepy_cat_mask_scale_2.heic")
 
     mask_0 = cv2.cvtColor(mask_0, cv2.COLOR_RGB2GRAY)
     mask_1 = cv2.cvtColor(mask_1, cv2.COLOR_RGB2GRAY)

@@ -1,7 +1,7 @@
 import cv2
-import pyheif
 import numpy as np
 import matplotlib.pyplot as plt
+from utils.image_reader import ImageReader
 
 
 def get_psnr(img_x, img_y):
@@ -77,7 +77,8 @@ def get_ms_ssim(img_x, img_y, n_level=5):
 
 
 if __name__ == "__main__":
-    src_img = pyheif.read_as_numpy("./images/tiger.heic")
+    reader = ImageReader()
+    src_img = reader.read("images/tiger.heic")
     h, w, c = src_img.shape
 
     small_img = cv2.resize(src_img, None, fx=0.25, fy=0.25,
@@ -119,7 +120,8 @@ if __name__ == "__main__":
     # ms_ssim_cubic = get_ms_ssim(src_img, inter_img_cubic)
     # ms_ssim_lanczos4 = get_ms_ssim(src_img, inter_img_lanczos4)
 
-    fig, axs = plt.subplots(2, 5, num="Upsampling loss comparision", figsize=(16, 7.5))
+    fig, axs = plt.subplots(
+        2, 5, num="Upsampling loss comparision", figsize=(16, 7.5))
 
     axs[0, 0].imshow(src_img)
     axs[0, 0].title("Original")

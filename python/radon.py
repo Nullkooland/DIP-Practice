@@ -1,9 +1,8 @@
 import cv2
-import pyheif
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.animation import ArtistAnimation
-import timeit
+from utils.image_reader import ImageReader
 
 # Paramaters
 N_theta = 256
@@ -31,6 +30,7 @@ def radon(img, theta):
 
     return g
 
+
 def get_backprojection_filter(length, ftype="ram-lak"):
     H = np.abs(np.linspace(0, 1, length))
     if ftype == "shepp-logan":
@@ -43,7 +43,8 @@ def get_backprojection_filter(length, ftype="ram-lak"):
 
 
 if __name__ == "__main__":
-    src_img = pyheif.read_as_numpy("./images/phantom.heic")
+    reader = ImageReader()
+    src_img = reader.read("images/phantom.heic")
     src_img = cv2.cvtColor(src_img, cv2.COLOR_BGR2GRAY)
     src_img = np.float32(src_img) / 255.0
 
@@ -59,7 +60,7 @@ if __name__ == "__main__":
     fig1, axs = plt.subplots(1, 2, num="Radon transform", figsize=(8, 4))
     axs[0].imshow(src_img)
     axs[1].imshow(g, extent=[-d / 2, d / 2, 0, 180],
-                  origin="bottom", aspect="auto")
+                  origin="lower", aspect="auto")
     axs[1].set_xlabel(r"$\alpha$")
     axs[1].set_ylabel(r"$\theta$")
 
@@ -72,7 +73,7 @@ if __name__ == "__main__":
 
     im_0 = axs[0].imshow(src_img, vmin=-0.1, vmax=0.1)
     im_1 = axs[1].imshow(rec_img)
-    
+
     axs[0].set_title("Smear")
     axs[1].set_title("Reconstructed")
 

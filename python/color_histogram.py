@@ -1,10 +1,11 @@
 import cv2
-import pyheif
 import numpy as np
 import matplotlib.pyplot as plt
+from utils.image_reader import ImageReader
 
 if __name__ == "__main__":
-    img_rgb = pyheif.read_as_numpy("./images/hand.heic")
+    reader = ImageReader()
+    img_rgb = reader.read("images/hand.heic", ignore_alpha=False)
     mask = img_rgb[..., 3] if img_rgb.shape[2] == 4 else None
     h, w = img_rgb.shape[:2]
 

@@ -1,11 +1,11 @@
 import cv2
-import pyheif
 import numpy as np
-import pyheif
 import matplotlib.pyplot as plt
+from utils.image_reader import ImageReader
 
 if __name__ == "__main__":
-    img_src = pyheif.read_as_numpy("./images/trek.heic")
+    reader = ImageReader()
+    img_src = reader.read("images/trek.heic")
 
     img_sketch, img_sketch = cv2.pencilSketch(
         img_src, None, None, 50, 0.08, 0.05)

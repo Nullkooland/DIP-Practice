@@ -1,12 +1,13 @@
 import cv2
-import pyheif
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.animation import ArtistAnimation
 from matplotlib.animation import FuncAnimation
+from utils.image_reader import ImageReader
 
 PATCH_SIZE = 8
 plt.style.use("science")
+
 
 def img2patches(img, h, w, patch_size):
     patches = np.empty((h * w // (patch_size ** 2),
@@ -41,7 +42,8 @@ def snr(a, b):
 
 
 if __name__ == "__main__":
-    src_img = pyheif.read_as_numpy("./images/river2.heic")
+    reader = ImageReader()
+    src_img = reader.read("images/river2.heic")
     gray_img = cv2.cvtColor(src_img, cv2.COLOR_RGB2GRAY)
     gray_img = np.float32(gray_img) / 255.0
     h, w = gray_img.shape

@@ -1,13 +1,14 @@
 import cv2
-import pyheif
 import numpy as np
 import matplotlib.pyplot as plt
+from utils.image_reader import ImageReader
 
 PIXEL_SIZE = 4
 PIXEL_MARGIN = 2
 
 if __name__ == "__main__":
-    img_src = pyheif.read_as_numpy("./images/testcard.heic")
+    reader = ImageReader()
+    img_src = reader.read("images/testcard.heic")
     img_src = cv2.cvtColor(img_src, cv2.COLOR_BGR2RGB)
 
     h, w = img_src.shape[:2]

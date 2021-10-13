@@ -1,15 +1,16 @@
 import cv2
-import pyheif
 import numpy as np
+from utils.image_reader import ImageReader
 import matplotlib.pyplot as plt
 
 if __name__ == "__main__":
     # load image with alpha channel
-    img_raw = pyheif.read_as_numpy("./images/opencv_logo.heic")
+    reader = ImageReader()
+    img_raw = reader.read("images/opencv_logo.heic", ignore_alpha=False)
     img_src = img_raw[..., :3].copy()
     mask = img_raw[..., 3]
     # load shape template
-    img_template = pyheif.read_as_numpy("./images/opencv_logo_part.heic")
+    img_template = reader.read("images/opencv_logo_part.heic")
     img_template = cv2.cvtColor(img_template, cv2.COLOR_RGB2GRAY)
     # set the transparent background as white
     img_bg = cv2.bitwise_or(img_src, (255, 255, 255), mask=~mask)

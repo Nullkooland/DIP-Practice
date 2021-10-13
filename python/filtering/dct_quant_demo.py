@@ -1,39 +1,8 @@
 import numpy as np
 import cv2
-import pyheif
 import matplotlib.pyplot as plt
 from matplotlib.widgets import Slider
-
-# load source image
-src_img = pyheif.read_as_numpy("./images/nebula.heic")
-fig = plt.figure(figsize=(12, 8))
-im = plt.imshow(src_img)
-
-# convert to YCbCr color space
-src_img = cv2.cvtColor(src_img, cv2.COLOR_RGB2YCrCb)
-src_img = np.float32(src_img)
-
-# split channels and compute DCT for each channel
-(y, cb, cr) = cv2.split(src_img)
-y_dct = cv2.dct(y)
-cb_dct = cv2.dct(cb)
-cr_dct = cv2.dct(cr)
-
-ax_luma_quant = plt.axes([0.15, 0.96, 0.75, 0.02])
-slider_luma_quant = Slider(ax_luma_quant,
-                           "Luma Quant",
-                           1,
-                           500,
-                           valinit=1,
-                           valstep=1)
-
-ax_chroma_quant = plt.axes([0.15, 0.92, 0.75, 0.02])
-slider_chroma_quant = Slider(ax_chroma_quant,
-                             "Chroma Quant",
-                             1,
-                             500,
-                             valinit=1,
-                             valstep=1)
+from utils.image_reader import ImageReader
 
 
 def get_q_img():
@@ -64,9 +33,41 @@ def update_chroma_quant(val):
     fig.canvas.draw_idle()
 
 
-# Set slider value changed callback
-slider_luma_quant.on_changed(update_luma_quant)
-slider_chroma_quant.on_changed(update_chroma_quant)
+if __name__ == "__main__":
+    # load source image
+    reader = ImageReader()
+    src_img = reader.read("images/nebula.heic")
+    fig = plt.figure(figsize=(12, 8))
+    im = plt.imshow(src_img)
 
-plt.show()
-plt.tight_layout()
+    # convert to YCbCr color space
+    src_img = cv2.cvtColor(src_img, cv2.COLOR_RGB2YCrCb)
+    src_img = np.float32(src_img)
+
+    # split channels and compute DCT for each channel
+    (y, cb, cr) = cv2.split(src_img)
+    y_dct = cv2.dct(y)
+    cb_dct = cv2.dct(cb)
+    cr_dct = cv2.dct(cr)
+
+    ax_luma_quant = plt.axes([0.15, 0.96, 0.75, 0.02])
+    slider_luma_quant = Slider(ax_luma_quant,
+                               "Luma Quant",
+                               1,
+                               500,
+                               valinit=1,
+                               valstep=1)
+
+    ax_chroma_quant = plt.axes([0.15, 0.92, 0.75, 0.02])
+    slider_chroma_quant = Slider(ax_chroma_quant,
+                                 "Chroma Quant",
+                                 1,
+                                 500,
+                                 valinit=1,
+                                 valstep=1)
+    # Set slider value changed callback
+    slider_luma_quant.on_changed(update_luma_quant)
+    slider_chroma_quant.on_changed(update_chroma_quant)
+
+    plt.show()
+    plt.tight_layout()

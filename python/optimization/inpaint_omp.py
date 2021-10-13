@@ -1,8 +1,8 @@
+import cv2
 import numpy as np
 import scipy.sparse.linalg as sparse
-import cv2
-import pyheif
 import matplotlib.pyplot as plt
+from utils.image_reader import ImageReader
 
 def omp(A, b, max_iters=64, err_tol=1e-5):
     m, n = A.shape
@@ -61,7 +61,8 @@ def poke_holes(img, p):
 
 if __name__ == "__main__":
     # Load image
-    src_img = pyheif.read_as_numpy("./images/lena256.heic")
+    reader = ImageReader()
+    src_img = reader.read("images/lena.heic")
     src_img = cv2.cvtColor(src_img, cv2.COLOR_BGR2GRAY)
     src_img = np.float32(src_img) / 255.0
     m, n = src_img.shape

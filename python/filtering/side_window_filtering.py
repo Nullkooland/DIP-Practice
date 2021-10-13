@@ -1,6 +1,7 @@
 import cv2
-import pyheif
 import numpy as np
+import matplotlib.pyplot as plt
+from utils.image_reader import ImageReader
 
 
 def add_salt_and_pepper(img, p):
@@ -137,53 +138,50 @@ def swf_median(img, k):
     return result
 
 
-src_img = pyheif.read_as_numpy("./images/opossum.heic")
-src_img = np.float32(src_img / 255.0)
+if __name__ == "__main__":
+    reader = ImageReader()
+    src_img = reader.read("images/opossum.heic", np.float32)
 
-gaussian_kernel = cv2.getGaussianKernel(7, 1.5, ktype=cv2.CV_32F)
+    gaussian_kernel = cv2.getGaussianKernel(7, 1.5, ktype=cv2.CV_32F)
 
-box_kernel = np.ones((7, 1), np.float32)
-box_kernel /= np.sum(box_kernel)
+    box_kernel = np.ones((7, 1), np.float32)
+    box_kernel /= np.sum(box_kernel)
 
-noised = add_salt_and_pepper(src_img, 0.075)
-noised = add_gaussian_noise(noised, 0.05)
+    noised = add_salt_and_pepper(src_img, 0.075)
+    noised = add_gaussian_noise(noised, 0.05)
 
-filtered_box = noised.copy()
-filtered_box_swf = noised.copy()
-filtered_gaussian = noised.copy()
-filtered_gaussian_swf = noised.copy()
-filtered_median = np.uint8(noised * 255.0)
-# filtered_median_swf = np.uint8(noised * 255.0)
-filtered_bilateral = noised.copy()
+    filtered_box = noised.copy()
+    filtered_box_swf = noised.copy()
+    filtered_gaussian = noised.copy()
+    filtered_gaussian_swf = noised.copy()
+    filtered_median = np.uint8(noised * 255.0)
+    # filtered_median_swf = np.uint8(noised * 255.0)
+    # filtered_bilateral = noised.copy()
 
-for _ in range(1):
     filtered_gaussian = cv2.sepFilter2D(
         filtered_gaussian, cv2.CV_32F, gaussian_kernel, gaussian_kernel)
     filtered_gaussian_swf = swf_linear(filtered_gaussian_swf, gaussian_kernel)
     filtered_box = cv2.boxFilter(filtered_box, cv2.CV_32F, (7, 7))
     filtered_box_swf = swf_linear(filtered_box_swf, box_kernel)
-    filtered_median = cv2.medianBlur(filtered_median, 3)
-    filtered_bilateral = cv2.bilateralFilter(filtered_bilateral, 7, 1.5, 0.5)
+    # filtered_median = cv2.medianBlur(filtered_median, 3)
+    # filtered_median_swf = swf_median(filtered_median_swf, 7)
+    # filtered_bilateral = cv2.bilateralFilter(filtered_bilateral, 7, 1.5, 0.5)
 
-# filtered_median_swf = swf_median(filtered_median_swf, 7)
+    fig, axs = plt.subplots(2, 3, figsize=(12, 8))
+    axs[0, 0].imshow(src_img)
+    axs[0, 0].set_title("Original")
 
-cv2.imshow("Original", src_img)
-cv2.imshow("Noised", noised)
+    axs[1, 0].imshow(noised)
+    axs[1, 0].set_title("Noised")
 
-# cv2.imshow("Box", filtered_box)
-# cv2.imshow("Gaussian", filtered_gaussian)
-# cv2.imshow("Median", filtered_median)
-# cv2.imshow("Bilateral", filtered_bilateral)
-cv2.imshow("SWF - Box", filtered_box_swf)
-cv2.imshow("SWF - Gaussian", filtered_gaussian_swf)
-# cv2.imshow("SWF - Median", filtered_median_swf)
-cv2.waitKey()
+    axs[0, 1].imshow(filtered_box)
+    axs[0, 1].set_title("Box")
+    axs[1, 1].imshow(filtered_box_swf)
+    axs[1, 1].set_title("SWF - Box")
 
-# cv2.imwrite("./output/noised_1.png", np.uint8(noised * 255.0))
-# cv2.imwrite("./output/filtered_box_1.png", np.uint8(filtered_box * 255.0))
-# cv2.imwrite("./output/filtered_gaussian_1.png", np.uint8(filtered_gaussian * 255.0))
-# cv2.imwrite("./output/filtered_median_1.png", filtered_median)
-# cv2.imwrite("./output/filtered_bilateral_1.png", np.uint8(filtered_bilateral * 255.0))
-# cv2.imwrite("./output/filtered_box_swf_1.png", np.uint8(filtered_box_swf * 255.0))
-# cv2.imwrite("./output/filtered_gaussian_swf_1.png", np.uint8(filtered_gaussian_swf * 255.0))
-# cv2.imwrite("./output/filtered_median_swf.png", filtered_median_swf)
+    axs[0, 2].imshow(filtered_gaussian)
+    axs[0, 2].set_title("Gaussian")
+    axs[1, 2].imshow(filtered_gaussian_swf)
+    axs[1, 2].set_title("SWF - Gaussian")
+
+    plt.show()

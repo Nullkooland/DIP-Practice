@@ -1,7 +1,7 @@
 import cv2
-import pyheif
 import numpy as np
 import matplotlib.pyplot as plt
+from utils.image_reader import ImageReader
 
 TEMPLATE_SIZE = 63
 AREA_THRESHOLD = 300
@@ -12,7 +12,8 @@ CENTER_REL_STD_THRESHOLD = 0.011
 
 
 if __name__ == "__main__":
-    img_src = pyheif.read_as_numpy("./images/cross_test_2.heic")
+    reader = ImageReader()
+    img_src = reader.read("images/cross_test_2.heic").copy()
     img_anno = img_src.copy()
 
     img_gray = cv2.cvtColor(img_src, cv2.COLOR_RGB2GRAY)
@@ -114,7 +115,7 @@ if __name__ == "__main__":
     cv2.drawContours(img_anno, cross_contours, -1, (255, 0, 255), -1)
 
     fig, (ax_src, ax_edges, ax_anno) = plt.subplots(
-        1, 3, num="Find Cross", figsize=(12, 4))
+        1, 3, num="Find Cross", figsize=(16, 4))
 
     ax_src.imshow(img_denoised)
     ax_edges.imshow(edges)

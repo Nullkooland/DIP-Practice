@@ -1,15 +1,16 @@
 import cv2
-import pyheif
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.cm import ScalarMappable
 from matplotlib.colors import Normalize
+from utils.image_reader import ImageReader
 
 # Di Zenzo's multichannel gradient for RGB color images
 # see Gonzalez & Woods, Digital Image Processing, 3rd Edition Chapter 6
 
 if __name__ == "__main__":
-    src_img = pyheif.read_as_numpy("./images/moon_back.heic")
+    reader = ImageReader()
+    src_img = reader.read("images/moon_back.heic")
 
     # calculate gradient on x and y axis for RGB respectively
 
@@ -32,12 +33,12 @@ if __name__ == "__main__":
 
     grad_mag = cv2.sqrt(0.5 *
                         ((g_xx + g_yy) + (g_yy - g_xx) * np.cos(theta) +
-                        2 * g_xy * np.sin(theta)))
+                         2 * g_xy * np.sin(theta)))
 
     grad_mag = cv2.normalize(grad_mag, None, 0, 255,
-                            norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_8U)
+                             norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_8U)
     theta = cv2.normalize(theta, None, 0, 255,
-                        norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_8U)
+                          norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_8U)
 
     grad_img = cv2.merge((theta, np.full_like(
         grad_mag, 255, dtype=np.uint8), grad_mag))
@@ -51,7 +52,7 @@ if __name__ == "__main__":
     ax1.imshow(grad_img)
     ax1.set_title("Gradient")
     fig.colorbar(ScalarMappable(norm=Normalize(vmin=0, vmax=180), cmap="hsv"),
-                ax=ax1, label="gradient angle",
-                ticks=np.arange(0, 181, 30))
+                 ax=ax1, label="gradient angle",
+                 ticks=np.arange(0, 181, 30))
 
     plt.show()

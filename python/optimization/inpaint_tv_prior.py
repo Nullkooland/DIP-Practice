@@ -1,10 +1,12 @@
-import numpy as np
 import cv2
+import numpy as np
 from numpy.core.fromnumeric import shape
-import pyheif
 import matplotlib.pyplot as plt
 import scipy.sparse.linalg as sparse_linalg
 from scipy.sparse.linalg import LinearOperator
+from utils.image_reader import ImageReader
+
+LAMBDA_TV = 1e-3
 
 
 def poke_holes(img, p):
@@ -16,9 +18,8 @@ def poke_holes(img, p):
 
 
 if __name__ == "__main__":
-    src_img = pyheif.read_as_numpy("./images/lena.heic")
-    src_img = np.float32(src_img) / 255.0
-    l_tv = 1e-3
+    reader = ImageReader()
+    src_img = reader.read("images/lena.heic", np.float32)
 
     m, n, c = src_img.shape
 
@@ -58,7 +59,7 @@ if __name__ == "__main__":
         shape=(m*n*c, m*n*c),
         matvec=lambda img_vec:
         missing_pixels(missing_pixels(img_vec)) +
-        l_tv * (
+        LAMBDA_TV * (
             diff_x_adjoint(diff_x(img_vec)) +
             diff_y_adjoint(diff_y(img_vec))
         )

@@ -1,22 +1,32 @@
 import cv2
-import pyheif
 import numpy as np
 import matplotlib.pyplot as plt
+from utils.image_reader import ImageReader
 
-src_img = pyheif.read_as_numpy("./images/dog.heic")
-src_img = cv2.resize(src_img, None, fx=0.5, fy=0.5,
-                     interpolation=cv2.INTER_AREA)
-# src_img = cv2.cvtColor(src_img, cv2.COLOR_BGR2RGB)
-h, w = src_img.shape[:2]
+MARKERS = [
+    cv2.GC_FGD,
+    cv2.GC_PR_FGD,
+    cv2.GC_BGD,
+    cv2.GC_PR_BGD,
+]
+
+MARKER_COLORS = [
+    (0, 255, 0),
+    (50, 125, 50),
+    (0, 0, 255),
+    (50, 50, 125),
+]
+
+MODE_STR = [
+    "FOREGROUND",
+    "PROBABLE_FOREGROUND",
+    "BACKGROUND",
+    "PROBABLE_BACKGROUND",
+    "FOREGROUND_RECT"
+]
 
 mode = 0
 is_mouse_down = False
-marker_colors = [
-    (100, 0, 100),
-    (0, 45, 255),
-    (200, 0, 50),
-    (0, 150, 200),
-]
 
 rect_p0 = (0, 0)
 rect_p1 = (0, 0)
@@ -45,9 +55,10 @@ def on_mouse(event, x, y, flags, param):
         if mode == 5:
             rect_p1 = (x, y)
         else:
-            mask = cv2.circle(mask, (x, y), 10, mode, -1, lineType=cv2.LINE_AA)
+            mask = cv2.circle(mask, (x, y), 10,
+                              MARKERS[mode], -1, lineType=cv2.LINE_AA)
             anno_img = cv2.circle(anno_img, (x, y), 10,
-                                  marker_colors[mode], -1, lineType=cv2.LINE_AA)
+                                  MARKER_COLORS[mode], -1, lineType=cv2.LINE_AA)
 
     if event == cv2.EVENT_RBUTTONDOWN:
         mask, bgd, fgd = cv2.grabCut(src_img, mask, None, bgd, fgd, 5,
@@ -77,29 +88,37 @@ def on_mouse(event, x, y, flags, param):
         # plt.show()
 
 
-anno_img = src_img.copy()
-mask = np.zeros((h, w), dtype=np.uint8)
-bgd = np.zeros((1, 65), dtype=np.float64)
-fgd = np.zeros((1, 65), dtype=np.float64)
+if __name__ == "__main__":
+    reader = ImageReader()
+    src_img = reader.read("images/dog.heic", swapRB=True)
+    src_img = cv2.resize(src_img, None, fx=0.5, fy=0.5,
+                         interpolation=cv2.INTER_AREA)
+    h, w = src_img.shape[:2]
 
-cv2.namedWindow("Marker", cv2.WINDOW_KEEPRATIO)
-cv2.setMouseCallback("Marker", on_mouse, (src_img, anno_img, mask, bgd, fgd))
+    anno_img = src_img.copy()
+    mask = np.zeros((h, w), dtype=np.uint8)
+    bgd = np.zeros((1, 65), dtype=np.float64)
+    fgd = np.zeros((1, 65), dtype=np.float64)
 
-while True:
-    if mode == 5:
-        cv2.copyTo(src_img, None, dst=anno_img)
-        cv2.rectangle(anno_img, rect_p0, rect_p1,
-                      (255, 0, 0), 2, lineType=cv2.LINE_4)
+    cv2.namedWindow("Marker", cv2.WINDOW_KEEPRATIO)
+    cv2.setMouseCallback("Marker", on_mouse,
+                         (src_img, anno_img, mask, bgd, fgd))
 
-    cv2.imshow("Marker", anno_img)
-    cv2.imshow("Mask", np.uint8(mask * 75))
+    while True:
+        if mode == 5:
+            cv2.copyTo(src_img, None, dst=anno_img)
+            cv2.rectangle(anno_img, rect_p0, rect_p1,
+                          (255, 0, 0), 2, lineType=cv2.LINE_4)
 
-    key = cv2.waitKey(1)
-    
-    if key == ord('q'):
-        break
-    if key != -1:
-        mode = key - ord('0')
-        print(f"Mode is {mode} now")
+        cv2.imshow("Marker", anno_img)
+        cv2.imshow("Mask", np.uint8(mask * 75))
 
-cv2.destroyAllWindows()
+        key = cv2.waitKey(1)
+
+        if key == ord('q'):
+            break
+        if key != -1:
+            mode = key - ord('0')
+            print(f"Mode is [{MODE_STR[mode]}] now")
+
+    cv2.destroyAllWindows()

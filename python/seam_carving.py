@@ -1,8 +1,8 @@
 import cv2
-import pyheif
 import numpy as np
 import matplotlib.pyplot as plt
 import time
+from utils.image_reader import ImageReader
 
 
 def get_energy(img):
@@ -100,34 +100,36 @@ def enlarge(src_img, dw):
     return I
 
 
-src_img = pyheif.read_as_numpy("./images/autumn.heic")
-src_img = cv2.cvtColor(src_img, cv2.COLOR_BGR2RGB)
-src_img = src_img.astype(np.float32) / 255.0
+if __name__ == "__main__":
+    reader = ImageReader()
+    src_img = reader.read("images/autumn.heic")
+    src_img = cv2.cvtColor(src_img, cv2.COLOR_BGR2RGB)
+    src_img = src_img.astype(np.float32) / 255.0
 
-I = np.copy(src_img)
-# I = np.rot90(src_img, 1)
+    I = np.copy(src_img)
+    # I = np.rot90(src_img, 1)
 
-b = time.time()
-for _ in range(64):
-    E = get_energy(I)
-    (M, _) = get_cme(E)
-    s = get_seam(M)
-    I = delete_seam(I, s)
-e = time.time()
-print(e - b)
+    b = time.time()
+    for _ in range(64):
+        E = get_energy(I)
+        (M, _) = get_cme(E)
+        s = get_seam(M)
+        I = delete_seam(I, s)
+    e = time.time()
+    print(e - b)
 
-# I = np.rot90(I, -1)
+    # I = np.rot90(I, -1)
 
-# I = enlarge(src_img, 384)
+    # I = enlarge(src_img, 384)
 
-plt.figure("Seam Carving")
+    plt.figure("Seam Carving")
 
-plt.subplot(1, 2, 1)
-plt.title("Original")
-plt.imshow(src_img)
+    plt.subplot(1, 2, 1)
+    plt.title("Original")
+    plt.imshow(src_img)
 
-plt.subplot(1, 2, 2)
-plt.title("Result")
-plt.imshow(I)
+    plt.subplot(1, 2, 2)
+    plt.title("Result")
+    plt.imshow(I)
 
-plt.show()
+    plt.show()

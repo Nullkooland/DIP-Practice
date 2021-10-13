@@ -1,6 +1,6 @@
 import cv2
-import pyheif
 import numpy as np
+from utils.image_reader import ImageReader
 
 WIN_NAME = "Inpaint"
 is_mouse_down = False
@@ -21,8 +21,8 @@ def on_mouse(event, x, y, flags, param):
 
 
 if __name__ == "__main__":
-
-    src_img = pyheif.read_as_numpy("./images/autumn.heic")
+    reader = ImageReader()
+    src_img = reader.read("images/seal.heic", swapRB=True).copy()
     mask = np.zeros(src_img.shape[:2], dtype=np.uint8)
     # cv2.imshow("image", src_img)
 
