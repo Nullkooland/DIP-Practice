@@ -11,6 +11,9 @@
             "program": "${command:cmake.launchTargetPath}",
             "args": [],
             "cwd": "${workspaceFolder}",
+            "env": [
+                "OPENCV_OPENCL_DEVICE=:GPU:1"
+            ],
             "internalConsoleOptions": "neverOpen",
             "console": "integratedTerminal"
         },
