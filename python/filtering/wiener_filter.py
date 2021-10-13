@@ -12,10 +12,10 @@ if __name__ == "__main__":
     height, width= src_img.shape[:2]
     # psf_img = reader.read("images/blur_impulse.heic")
 
-    f = cv2.cvtColor(src_img, cv2.COLOR_RGB2GRAY).astype(np.float64) / 255.0
+    f = cv2.cvtColor(src_img, cv2.COLOR_RGB2GRAY).astype(np.float32) / 255.0
     # h = cv2.cvtColor(psf_img, cv2.COLOR_RGB2GRAY).astype(np.float64) / 255.0
 
-    h = cv2.getGaussianKernel(BLUR_KERNEL_SIZE, 0)
+    h = cv2.getGaussianKernel(BLUR_KERNEL_SIZE, 0, ktype=cv2.CV_32F)
     h = h @ h.T
 
     # normalize psf

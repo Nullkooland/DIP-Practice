@@ -45,7 +45,7 @@ def get_backprojection_filter(length, ftype="ram-lak"):
 if __name__ == "__main__":
     reader = ImageReader()
     src_img = reader.read("images/phantom.heic")
-    src_img = cv2.cvtColor(src_img, cv2.COLOR_BGR2GRAY)
+    src_img = cv2.cvtColor(src_img, cv2.COLOR_RGB2GRAY)
     src_img = np.float32(src_img) / 255.0
 
     theta = np.linspace(0, 180 - 180 / N_theta, N_theta)

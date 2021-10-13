@@ -10,7 +10,7 @@ if __name__ == "__main__":
     src_img = reader.read("images/testcard720.heic")
     h, w, c = src_img.shape
 
-    gray_img = cv2.cvtColor(src_img, cv2.COLOR_BGR2GRAY)
+    gray_img = cv2.cvtColor(src_img, cv2.COLOR_RGB2GRAY)
     gray_img = np.float32(gray_img) / 255.0
 
     blur_filter = cv2.getGaussianKernel(

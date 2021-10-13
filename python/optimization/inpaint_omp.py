@@ -63,7 +63,7 @@ if __name__ == "__main__":
     # Load image
     reader = ImageReader()
     src_img = reader.read("images/lena.heic")
-    src_img = cv2.cvtColor(src_img, cv2.COLOR_BGR2GRAY)
+    src_img = cv2.cvtColor(src_img, cv2.COLOR_RGB2GRAY)
     src_img = np.float32(src_img) / 255.0
     m, n = src_img.shape
     # estimate sparsity level of image in transform domain

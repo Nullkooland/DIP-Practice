@@ -102,9 +102,7 @@ def enlarge(src_img, dw):
 
 if __name__ == "__main__":
     reader = ImageReader()
-    src_img = reader.read("images/autumn.heic")
-    src_img = cv2.cvtColor(src_img, cv2.COLOR_BGR2RGB)
-    src_img = src_img.astype(np.float32) / 255.0
+    src_img = reader.read("images/autumn.heic", np.float32)
 
     I = np.copy(src_img)
     # I = np.rot90(src_img, 1)

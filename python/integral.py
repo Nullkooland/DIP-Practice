@@ -6,7 +6,7 @@ from utils.image_reader import ImageReader
 if __name__ == "__main__":
     reader = ImageReader()
     src_img = reader.read("images/tranquility.heic")
-    gray_img = cv2.cvtColor(src_img, cv2.COLOR_BGR2GRAY)
+    gray_img = cv2.cvtColor(src_img, cv2.COLOR_RGB2GRAY)
     gray_img = ~gray_img
     # gray_img = cv2.Canny(gray_img, 500, 1400, apertureSize=5)
 
