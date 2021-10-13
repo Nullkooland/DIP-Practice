@@ -31,4 +31,5 @@ if __name__ == "__main__":
         ax.plot(corner[0], corner[1], ls='', marker='.', color="red")
         ax.plot(corner_refined[0], corner_refined[1], ls='', marker='.', color="magenta")
 
+    ax.legend(["Coarse", "Refined"])
     plt.show()
