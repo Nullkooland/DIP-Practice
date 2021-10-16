@@ -33,13 +33,13 @@ if __name__ == "__main__":
     axs[0].set_title("Mask")
 
     axs[1].imshow(dist_l2, cmap="inferno")
-    axs[1].set_title(r"$L_2$" + " (Euclidean Distance)")
+    axs[1].set_title(r"$\ell_2$" + " (Euclidean Distance)")
 
     axs[2].imshow(dist_l1, cmap="inferno")
-    axs[2].set_title(r"$L_1$" + " (City Distance)")
+    axs[2].set_title(r"$\ell_1$" + " (City Distance)")
 
     axs[3].imshow(dist_linf, cmap="inferno")
-    axs[3].set_title(r"$L_\infty$" + " (Checkerboard Distance)")
+    axs[3].set_title(r"$\ell_\infty$" + " (Checkerboard Distance)")
 
     plt.tight_layout()
     plt.show()
