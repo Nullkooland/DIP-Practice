@@ -13,7 +13,7 @@ CENTER_REL_STD_THRESHOLD = 0.011
 
 if __name__ == "__main__":
     reader = ImageReader()
-    img_src = reader.read("images/cross_test_2.heic").copy()
+    img_src = reader.read("images/cross_test_2.heic")
     img_anno = img_src.copy()
 
     img_gray = cv2.cvtColor(img_src, cv2.COLOR_RGB2GRAY)

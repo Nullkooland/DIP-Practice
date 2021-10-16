@@ -5,7 +5,7 @@ from utils.image_reader import ImageReader
 
 if __name__ == "__main__":
     reader = ImageReader()
-    src_img = reader.read("images/contour_test.heic").copy()
+    src_img = reader.read("images/contour_test.heic")
     gray_img = cv2.cvtColor(src_img, cv2.COLOR_RGB2GRAY)
     h, w = src_img.shape[:2]
 

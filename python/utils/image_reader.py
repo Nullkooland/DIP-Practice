@@ -71,7 +71,10 @@ class ImageReader():
         )
 
         img = np.frombuffer(buffer, dtype=dtype).reshape((h, w, 4))
-        return img[..., :3] if ignore_alpha else img
+        if ignore_alpha:
+            img = img[..., :3].copy()
+
+        return img
 
 
 if __name__ == "__main__":

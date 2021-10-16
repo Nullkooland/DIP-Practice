@@ -7,7 +7,7 @@ BACKGROUND_COLOR = np.array((170, 170, 170), dtype=np.uint8)
 
 if __name__ == "__main__":
     reader = ImageReader()
-    img_src = reader.read("images/shapes_on_paper.heic").copy()
+    img_src = reader.read("images/shapes_on_paper.heic")
 
     # pre-process image to smooth out details
     img_mean_shifted = cv2.pyrMeanShiftFiltering(img_src, 20, 50, maxLevel=1)

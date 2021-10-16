@@ -7,7 +7,7 @@ from utils.image_reader import ImageReader
 
 if __name__ == "__main__":
     reader = ImageReader()
-    src_img = reader.read("images/rmb_coins.heic").copy()
+    src_img = reader.read("images/rmb_coins.heic")
     template = reader.read("images/one_yuan_coin.heic")
     template = cv2.resize(template, (192, 192))
 

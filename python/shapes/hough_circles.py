@@ -5,7 +5,7 @@ from utils.image_reader import ImageReader
 
 if __name__ == "__main__":
     reader = ImageReader()
-    src_img = reader.read("images/rmb_coins.heic").copy()
+    src_img = reader.read("images/rmb_coins.heic")
     h, w = src_img.shape[:2]
 
     gray_img = cv2.cvtColor(src_img, cv2.COLOR_RGB2GRAY)
